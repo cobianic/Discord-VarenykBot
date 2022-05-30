@@ -52,8 +52,7 @@ module.exports = async (client, oldState, newState) => {
           let playerResumed = client
             .Embed()
             // say that the queue has been resumed
-            .setTitle(`Resumed!`, client.config.iconURL)
-            .setFooter({ text: `The current song has been resumed.` });
+            .setDescription(`Пісня знята з паузи.`);
           await client.channels.cache
             .get(player.textChannel)
             .send({ embeds: [playerResumed] });
@@ -82,10 +81,7 @@ module.exports = async (client, oldState, newState) => {
 
           let playerPaused = client
             .Embed()
-            .setTitle(`Paused!`, client.config.iconURL)
-            .setFooter({
-              text: `The current song has been paused because theres no one in the voice channel.`,
-            });
+            .setDescription(`Музика на паузі, бо в голосовому каналі нікого немає.`);
           await client.channels.cache
             .get(player.textChannel)
             .send({ embeds: [playerPaused] });

@@ -3,11 +3,11 @@ const SlashCommand = require("../../lib/SlashCommand");
 
 const command = new SlashCommand()
   .setName("play")
-  .setDescription("Play music in the voice channel")
+  .setDescription("Грає музику")
   .addStringOption((option) =>
     option
-      .setName("query")
-      .setDescription("Search string to search the music")
+      .setName("запит")
+      .setDescription("Ссилка або назва пісні")
       .setRequired(true)
   )
   .setRun(async (client, interaction, options) => {
@@ -17,16 +17,16 @@ const command = new SlashCommand()
     let node = await client.getLavalink(client);
     if (!node) {
       return interaction.reply({
-        embeds: [client.ErrorEmbed("Lavalink node is not connected")],
+        embeds: [client.ErrorEmbed("Немає з'єднання з нодою Lavalink")],
       });
     }
-    let query = options.getString("query", true);
+    let query = options.getString("запит", true);
     let player = client.createPlayer(interaction.channel, channel);
     if (!interaction.member.voice.channel) {
       const joinEmbed = new MessageEmbed()
         .setColor(client.config.embedColor)
         .setDescription(
-          "❌ | **You must be in a voice channel to use this command.**"
+          "❌ | **Ви маєте знаходитись в голосовому каналі, щоб використовувати цю команду.**"
         );
       return interaction.reply({ embeds: [joinEmbed], ephemeral: true });
     }
@@ -35,9 +35,9 @@ const command = new SlashCommand()
     }
     // console.log(player);
     // if the channel is a stage channel then request to speak
-    if (channel.type == "GUILD_STAGE_VOICE") {
+    if (channel.type === "GUILD_STAGE_VOICE") {
       setTimeout(() => {
-        if (interaction.guild.me.voice.suppress == true) {
+        if (interaction.guild.me.voice.suppress === true) {
           try {
             interaction.guild.me.voice.setSuppressed(false);
           } catch (e) {
@@ -48,7 +48,7 @@ const command = new SlashCommand()
     }
 
     await interaction.reply({
-      embeds: [client.Embed(":mag_right: **Searching...**")],
+      embeds: [client.Embed(":mag_right: **Шукаю...**")],
     });
 
     let res = await player.search(query, interaction.user).catch((err) => {
@@ -62,7 +62,7 @@ const command = new SlashCommand()
       if (!player.queue.current) player.destroy();
       return interaction
         .editReply({
-          embeds: [client.ErrorEmbed("There was an error while searching")],
+          embeds: [client.ErrorEmbed("Протягом пошуку відбулась помилка")],
         })
         .catch(this.warn);
     }
@@ -71,7 +71,7 @@ const command = new SlashCommand()
       if (!player.queue.current) player.destroy();
       return interaction
         .editReply({
-          embeds: [client.ErrorEmbed("No results were found")],
+          embeds: [client.ErrorEmbed("Нічого не знайдено")],
         })
         .catch(this.warn);
     }
@@ -85,14 +85,14 @@ const command = new SlashCommand()
         .setAuthor({ name: "Added to queue", iconURL: client.config.iconURL })
         //.setAuthor("Added to queue", client.config.iconURL) Deprecated soon
         .setDescription(
-          `[${res.tracks[0].title}](${res.tracks[0].uri})` || "No Title"
+          `[${res.tracks[0].title}](${res.tracks[0].uri})` || "Без назви"
         )
         .setURL(res.tracks[0].uri)
-        .addField("Author", res.tracks[0].author, true)
+        .addField("Автор", res.tracks[0].author, true)
         .addField(
-          "Duration",
+          "Тривалість",
           res.tracks[0].isStream
-            ? `\`LIVE\``
+            ? `\`стрім\``
             : `\`${client.ms(res.tracks[0].duration, {
                 colonNotation: true,
               })}\``,
@@ -107,7 +107,7 @@ const command = new SlashCommand()
       }
       if (player.queue.totalSize > 1)
         addQueueEmbed.addField(
-          "Position in queue",
+          "Позиція в черзі",
           `${player.queue.size - 0}`,
           true
         );
@@ -127,15 +127,15 @@ const command = new SlashCommand()
       let playlistEmbed = client
         .Embed()
         .setAuthor({
-          name: "Playlist added to queue",
+          name: "Плейлист доданий до черги",
           iconURL: client.config.iconURL,
         })
         //.setAuthor("Playlist added to queue", client.config.iconURL)
         .setThumbnail(res.tracks[0].thumbnail)
         .setDescription(`[${res.playlist.name}](${query})`)
-        .addField("Enqueued", `\`${res.tracks.length}\` songs`, false)
+        .addField("Додано в чергу", `\`${res.tracks.length}\` пісень`, false)
         .addField(
-          "Playlist duration",
+          "Тривалість плейлиста",
           `\`${client.ms(res.playlist.duration, {
             colonNotation: true,
           })}\``,

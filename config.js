@@ -11,7 +11,7 @@ module.exports = {
   supportServer: "https://discord.gg/sbySMS7m3v", //Support Server Link
   Issues: "https://github.com/SudhanPlayz/Discord-MusicBot/issues", //Bug Report Link
   permissions: 277083450689, //Bot Inviting Permissions
-  disconnectTime: 30000, //How long should the bot wait before disconnecting from the voice channel. in miliseconds. set to 1 for instant disconnect.
+  disconnectTime: 1, //How long should the bot wait before disconnecting from the voice channel. in miliseconds. set to 1 for instant disconnect.
   alwaysplay: true, // when set to true music will always play no matter if theres no one in voice channel.
   debug: false, //Debug mode
   // Lavalink server; optional public lavalink -> https://lavalink-list.darrennathanael.com/
@@ -33,7 +33,7 @@ module.exports = {
     status: "online", // You can have online, idle, and dnd(invisible too but it make people think the bot is offline)
     activities: [
       {
-        name: "Music", //Status Text
+        name: "/play", //Status Text
         type: "LISTENING", // PLAYING, WATCHING, LISTENING, STREAMING
       },
     ],

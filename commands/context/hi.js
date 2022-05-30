@@ -9,6 +9,6 @@ module.exports = {
    * @param {import("discord.js").GuildContextMenuInteraction} interaction
    */
   run: (client, interaction, options) => {
-    interaction.reply(`<@${interaction.options.getUser("user").id}>, Hello!`);
+    interaction.reply(`<@${interaction.options.getUser("user").id}>, привіт!`);
   },
 };

@@ -26,7 +26,7 @@ const command = new SlashCommand()
       const joinEmbed = new MessageEmbed()
         .setColor(client.config.embedColor)
         .setDescription(
-          "❌ | **Ви маєте знаходитись в голосовому каналі, щоб використовувати цю команду.**"
+          "❌ | **Хазяїн, ви не в моєму голосовому каналі**"
         );
       return interaction.reply({ embeds: [joinEmbed], ephemeral: true });
     }

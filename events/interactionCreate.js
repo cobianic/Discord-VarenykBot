@@ -12,7 +12,7 @@ module.exports = (client, interaction) => {
     );
     if (!command || !command.run)
       return interaction.reply(
-        "Вибачте, команда, яку ви використали, не виконує ніяку функцію ੨( ･᷄ ︵･᷅ )ｼ"
+        "Вибачте, команда, яку ви використали, не виконує ніяку функцію (◞‸◟；)"
       );
     command.run(client, interaction, interaction.options);
     return;
@@ -24,7 +24,7 @@ module.exports = (client, interaction) => {
     );
     if (!command || !command.run)
       return interaction.reply(
-        "Вибачте, команда, яку ви використали, не виконує ніяку функцію ੨( ･᷄ ︵･᷅ )ｼ"
+        "Вибачте, команда, яку ви використали, не виконує ніяку функцію (◞‸◟；)"
       );
     command.run(client, interaction, interaction.options);
     return;

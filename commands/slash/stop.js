@@ -2,20 +2,20 @@ const SlashCommand = require("../../lib/SlashCommand");
 const { MessageEmbed } = require("discord.js");
 
 const command = new SlashCommand()
-  .setName("disconnect")
-  .setDescription("Stops the music and leaves the voice channel")
+  .setName("stop")
+  .setDescription("Зупиняє музику і очищає чергу")
   .setRun(async (client, interaction, options) => {
     let player = client.manager.players.get(interaction.guild.id);
     if (!player)
       return interaction.reply({
-        embeds: [client.ErrorEmbed("**Nothing is playing right now...**")],
+        embeds: [client.ErrorEmbed("**Зараз нічого не грає**")],
       });
 
     if (!interaction.member.voice.channel) {
       const joinEmbed = new MessageEmbed()
         .setColor(client.config.embedColor)
         .setDescription(
-          "❌ | **You must be in a voice channel to use this command!**"
+          "❌ | **Хазяїн, ви не в голосовому каналі**"
         );
       return interaction.reply({ embeds: [joinEmbed], ephemeral: true });
     }
@@ -29,7 +29,7 @@ const command = new SlashCommand()
       const sameEmbed = new MessageEmbed()
         .setColor(client.config.embedColor)
         .setDescription(
-          "❌ | **You must be in the same voice channel as me to use this command!**"
+          "❌ | **Хазяїн, ви не в моєму голосовому каналі**"
         );
       return interaction.reply({ embeds: [sameEmbed], ephemeral: true });
     }
@@ -37,7 +37,7 @@ const command = new SlashCommand()
     player.destroy();
 
     interaction.reply({
-      embeds: [client.Embed(`:wave: | **Disconnected!**`)],
+      embeds: [client.Embed(`**Від'єднався!**`)],
     });
   });
 

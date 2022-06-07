@@ -8,14 +8,14 @@ const command = new SlashCommand()
     let player = client.manager.players.get(interaction.guild.id);
     if (!player)
       return interaction.reply({
-        embeds: [client.ErrorEmbed("**Зараз нічого не грає**")],
+        embeds: [client.ErrorEmbed("Зараз нічого не грає")],
       });
 
     if (!interaction.member.voice.channel) {
       const joinEmbed = new MessageEmbed()
-        .setColor(client.config.embedColor)
+        .setColor("RED")
         .setDescription(
-          "❌ | **Хазяїн, ви не в голосовому каналі**"
+          "❌ | Хазяїн, ви не в голосовому каналі"
         );
       return interaction.reply({ embeds: [joinEmbed], ephemeral: true });
     }
@@ -27,9 +27,9 @@ const command = new SlashCommand()
       )
     ) {
       const sameEmbed = new MessageEmbed()
-        .setColor(client.config.embedColor)
+        .setColor("RED")
         .setDescription(
-          "❌ | **Хазяїн, ви не в моєму голосовому каналі**"
+          "❌ | Хазяїн, ви не в моєму голосовому каналі"
         );
       return interaction.reply({ embeds: [sameEmbed], ephemeral: true });
     }
@@ -37,7 +37,7 @@ const command = new SlashCommand()
     player.destroy();
 
     interaction.reply({
-      embeds: [client.Embed(`**Від'єднався!**`)],
+      embeds: [client.Embed(`Від'єднався!`)],
     });
   });
 

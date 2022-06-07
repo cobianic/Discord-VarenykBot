@@ -24,9 +24,9 @@ const command = new SlashCommand()
     let player = client.createPlayer(interaction.channel, channel);
     if (!interaction.member.voice.channel) {
       const joinEmbed = new MessageEmbed()
-        .setColor(client.config.embedColor)
+        .setColor("RED")
         .setDescription(
-          "❌ | **Хазяїн, ви не в моєму голосовому каналі**"
+          "❌ | Хазяїн, ви не в моєму голосовому каналі"
         );
       return interaction.reply({ embeds: [joinEmbed], ephemeral: true });
     }

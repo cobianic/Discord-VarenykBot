@@ -12,7 +12,7 @@ module.exports = async (client, interaction) => {
   if (!player) {
     interaction.reply({
       embeds: [
-        client.ErrorEmbed("Нічого не грає, нічого контролювати"),
+        client.ErrorEmbed("Нічого не грає, нічим керувати"),
       ],
     });
     setTimeout(() => {

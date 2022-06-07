@@ -3,14 +3,14 @@ const SlashCommand = require("../../lib/SlashCommand");
 
 const command = new SlashCommand()
   .setName("247")
-  .setDescription("toggles 24/7")
+  .setDescription("режим програвання 24/7")
   .setRun(async (client, interaction, options) => {
     let player = client.manager.players.get(interaction.guild.id);
     if (!interaction.member.voice.channel) {
       const joinEmbed = new MessageEmbed()
-        .setColor(client.config.embedColor)
+        .setColor("RED")
         .setDescription(
-          "❌ | **You need to join voice channel first before you can use this command.**"
+          "❌ | Хазяїн, ви не в голосовому каналі"
         );
       return interaction.reply({ embeds: [joinEmbed], ephemeral: true });
     }
@@ -22,23 +22,23 @@ const command = new SlashCommand()
       )
     ) {
       const sameEmbed = new MessageEmbed()
-        .setColor(client.config.embedColor)
+        .setColor("RED")
         .setDescription(
-          "❌ | **You must be in the same voice channel as me.**"
+          "❌ | Хазяїн, ви не в моєму голосовому каналі"
         );
       return interaction.reply({ embeds: [sameEmbed], ephemeral: true });
     }
     if (!player) {
       return interaction.reply({
-        embeds: [client.ErrorEmbed("**There's nothing to play 24/7!**")],
+        embeds: [client.ErrorEmbed("Немає що грати 24/7")],
       });
     } else if (player.twentyFourSeven) {
       player.twentyFourSeven = false;
-      const embed = client.Embed(`✅ | **24/7 mode is now off.**`);
+      const embed = client.Embed(`✅ | режим 24/7 тепер вимкнений`);
       return interaction.reply({ embeds: [embed] });
     } else {
       player.twentyFourSeven = true;
-      const embed = client.Embed(`✅ | **24/7 mode is now on.**`);
+      const embed = client.Embed(`✅ | режим 24/7 тепер ввімкнений`);
       return interaction.reply({ embeds: [embed] });
     }
   });

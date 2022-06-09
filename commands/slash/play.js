@@ -87,8 +87,18 @@ const command = new SlashCommand()
     }
 
     if (res.loadType === "TRACK_LOADED" || res.loadType === "SEARCH_RESULT") {
-      player.queue.add(res.tracks[0]);
-
+      const r = res.tracks[0];
+      if (player.get("autoplay")) {
+        const psba = player.get("autoplayed") || [];
+        if (r) {
+          if (!psba.includes(r.identifier)) {
+            psba.push(r.identifier);
+          }
+        }
+        while (psba.length > 100) psba.shift();
+        player.set("autoplayed", psba);
+      }
+      player.queue.add(r);
       if (!player.playing && !player.paused && !player.queue.size)
         player.play();
 
@@ -134,6 +144,16 @@ const command = new SlashCommand()
     }
 
     if (res.loadType === "PLAYLIST_LOADED") {
+      if (player.get("autoplay")) {
+        const psba = player.get("autoplayed") || [];
+        for (const r of res.tracks) {
+          if (r && !psba.includes(r.identifier)) {
+            psba.push(r.identifier);
+          }
+        }
+        while (psba.length > 100) psba.shift();
+        player.set("autoplayed", psba);
+      }
       player.queue.add(res.tracks);
 
       if (

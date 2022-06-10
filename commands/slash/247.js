@@ -5,42 +5,59 @@ const command = new SlashCommand()
   .setName("247")
   .setDescription("режим програвання 24/7")
   .setRun(async (client, interaction, options) => {
-    let player = client.manager.players.get(interaction.guild.id);
-    if (!interaction.member.voice.channel) {
-      const joinEmbed = new MessageEmbed()
-        .setColor("RED")
-        .setDescription(
-          "❌ | Хазяїн, ви не в голосовому каналі"
-        );
-      return interaction.reply({ embeds: [joinEmbed], ephemeral: true });
-    }
+    let channel = await client.getChannel(client, interaction);
+    if (!channel) return;
 
-    if (
-      interaction.guild.me.voice.channel &&
-      !interaction.guild.me.voice.channel.equals(
-        interaction.member.voice.channel
-      )
-    ) {
-      const sameEmbed = new MessageEmbed()
-        .setColor("RED")
-        .setDescription(
-          "❌ | Хазяїн, ви не в моєму голосовому каналі"
-        );
-      return interaction.reply({ embeds: [sameEmbed], ephemeral: true });
-    }
+    let player;
+    if (client.manager)
+      player = client.manager.players.get(interaction.guild.id);
+    else
+      return interaction.reply({
+        embeds: [
+          new MessageEmbed()
+            .setColor("RED")
+            .setDescription("Lavalink node is not connected"),
+        ],
+      });
+
     if (!player) {
       return interaction.reply({
-        embeds: [client.ErrorEmbed("Немає що грати 24/7")],
+        embeds: [
+          new MessageEmbed()
+            .setColor("RED")
+            .setDescription("There's nothing to play 24/7."),
+        ],
+        ephemeral: true,
       });
-    } else if (player.twentyFourSeven) {
-      player.twentyFourSeven = false;
-      const embed = client.Embed(`✅ | режим 24/7 тепер вимкнений`);
-      return interaction.reply({ embeds: [embed] });
-    } else {
-      player.twentyFourSeven = true;
-      const embed = client.Embed(`✅ | режим 24/7 тепер ввімкнений`);
-      return interaction.reply({ embeds: [embed] });
     }
+
+    let twentyFourSevenEmbed = new MessageEmbed().setColor(
+      client.config.embedColor
+    );
+    const twentyFourSeven = player.get("twentyFourSeven");
+
+    if (!player.twentyFourSeven || player.twentyFourSeven === false) {
+      player.set("twentyFourSeven", true);
+    } else {
+      player.set("twentyFourSeven", false);
+    }
+
+    twentyFourSevenEmbed.setDescription(
+      `✅ | **24/7 mode is \`${!player.twentyFourSeven ? "ON" : "OFF"}**\``
+    );
+    client.warn(
+      `Player: ${player.options.guild} | [${colors.blue(
+        "24/7"
+      )}] has been [${colors.blue(
+        !twentyFourSeven ? "ENABLED" : "DISABLED"
+      )}] in ${
+        client.guilds.cache.get(player.options.guild)
+          ? client.guilds.cache.get(player.options.guild).name
+          : "a guild"
+      }`
+    );
+
+    return interaction.reply({ embeds: [twentyFourSevenEmbed] });
   });
 module.exports = command;
 // check above message, it is a little bit confusing. and erros are not handled. probably should be fixed.

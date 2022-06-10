@@ -1,9 +1,11 @@
-// const { Manager } = require("erela.js/structures/Manager");
 const SlashCommand = require("../../lib/SlashCommand");
+const { MessageEmbed } = require("discord.js");
 
 const command = new SlashCommand()
   .setName("play")
-  .setDescription("Грає музику")
+  .setDescription(
+    "Шукає і грає пісні\n__Підтримує:__\nYoutube, Spotify, Deezer, Apple Music"
+  )
   .addStringOption((option) =>
     option
       .setName("запит")
@@ -14,28 +16,23 @@ const command = new SlashCommand()
     let channel = await client.getChannel(client, interaction);
     if (!channel) return;
 
-    let node = await client.getLavalink(client);
-    if (!node) {
+    let player;
+    if (client.manager)
+      player = client.createPlayer(interaction.channel, channel);
+    else
       return interaction.reply({
-        embeds: [client.ErrorEmbed("Немає з'єднання з нодою Lavalink")],
+        embeds: [
+          new MessageEmbed()
+            .setColor("RED")
+            .setDescription("Немає з'єднання з нодою Lavalink"),
+        ],
       });
-    }
-    let query = options.getString("запит", true);
-    let player = client.createPlayer(interaction.channel, channel);
-    if (!interaction.member.voice.channel) {
-      const joinEmbed = new MessageEmbed()
-        .setColor("RED")
-        .setDescription(
-          "❌ | Хазяїн, ви не в моєму голосовому каналі"
-        );
-      return interaction.reply({ embeds: [joinEmbed], ephemeral: true });
-    }
+
     if (player.state !== "CONNECTED") {
       player.connect();
     }
-    // console.log(player);
-    // if the channel is a stage channel then request to speak
-    if (channel.type === "GUILD_STAGE_VOICE") {
+
+    if (channel.type == "GUILD_STAGE_VOICE") {
       setTimeout(() => {
         if (interaction.guild.me.voice.suppress === true) {
           try {
@@ -44,13 +41,18 @@ const command = new SlashCommand()
             interaction.guild.me.voice.setRequestToSpeak(true);
           }
         }
-      }, 2000); // set timeout are here, because bot sometimes takes time before reconising it's a stage.
+      }, 2000); //recognizing it's a stage channel?
     }
 
     await interaction.reply({
-      embeds: [client.Embed(":mag_right: **Шукаю...**")],
+      embeds: [
+        new MessageEmbed()
+          .setColor(client.config.embedColor)
+          .setDescription(":mag_right: **Шукаю...**"),
+      ],
     });
 
+    let query = options.getString("запит", true);
     let res = await player.search(query, interaction.user).catch((err) => {
       client.error(err);
       return {
@@ -62,7 +64,11 @@ const command = new SlashCommand()
       if (!player.queue.current) player.destroy();
       return interaction
         .editReply({
-          embeds: [client.ErrorEmbed("Протягом пошуку відбулась помилка")],
+          embeds: [
+            new MessageEmbed()
+              .setColor("RED")
+              .setDescription("Протягом пошуку відбулась помилка"),
+          ],
         })
         .catch(this.warn);
     }
@@ -71,35 +77,29 @@ const command = new SlashCommand()
       if (!player.queue.current) player.destroy();
       return interaction
         .editReply({
-          embeds: [client.ErrorEmbed("Нічого не знайдено")],
+          embeds: [
+            new MessageEmbed()
+              .setColor("RED")
+              .setDescription("Нічого не знайдено"),
+          ],
         })
         .catch(this.warn);
     }
 
     if (res.loadType === "TRACK_LOADED" || res.loadType === "SEARCH_RESULT") {
-      const r = res.tracks[0];
-      if (player.get("autoplay")) {
-        const psba = player.get("autoplayed") || [];
-        if (r) {
-          if (!psba.includes(r?.identifier)) {
-            psba.push(r.identifier);
-          }
-        }
-        while (psba.length > 100) psba.shift();
-        player.set("autoplayed", psba);
-      }
-      player.queue.add(r);
+      player.queue.add(res.tracks[0]);
+
       if (!player.playing && !player.paused && !player.queue.size)
         player.play();
-      let addQueueEmbed = client
-        .Embed()
+
+      let addQueueEmbed = new MessageEmbed()
+        .setColor(client.config.embedColor)
         .setAuthor({ name: "Додано до черги", iconURL: client.config.iconURL })
-        //.setAuthor("Added to queue", client.config.iconURL) Deprecated soon
         .setDescription(
           `[${res.tracks[0].title}](${res.tracks[0].uri})` || "Без назви"
         )
         .setURL(res.tracks[0].uri)
-        .addField("Автор", res.tracks[0].author, true)
+        .addField("Додав", `<@${interaction.user.id}>`, true)
         .addField(
           "Тривалість",
           res.tracks[0].isStream
@@ -109,6 +109,7 @@ const command = new SlashCommand()
               })}\``,
           true
         );
+
       try {
         addQueueEmbed.setThumbnail(
           res.tracks[0].displayThumbnail("maxresdefault")
@@ -116,52 +117,47 @@ const command = new SlashCommand()
       } catch (err) {
         addQueueEmbed.setThumbnail(res.tracks[0].thumbnail);
       }
+
       if (player.queue.totalSize > 1)
         addQueueEmbed.addField(
           "Позиція в черзі",
-          `${player.queue.size - 0}`,
+          `${player.queue.size}`,
           true
         );
+      else {
+        player.queue.previous = player.queue.current;
+      }
+
       return interaction
         .editReply({ embeds: [addQueueEmbed] })
         .catch(this.warn);
     }
 
     if (res.loadType === "PLAYLIST_LOADED") {
-      if (player.get("autoplay")) {
-        const psba = player.get("autoplayed") || [];
-        for (const r of res.tracks) {
-          if (r && !psba.includes(r?.identifier)) {
-            psba.push(r.identifier);
-          }
-        }
-        while (psba.length > 100) psba.shift();
-        player.set("autoplayed", psba);
-      }
       player.queue.add(res.tracks);
+
       if (
         !player.playing &&
         !player.paused &&
         player.queue.totalSize === res.tracks.length
       )
         player.play();
-      let playlistEmbed = client
-        .Embed()
+
+      let playlistEmbed = new MessageEmbed()
+        .setColor(client.config.embedColor)
         .setAuthor({
           name: "Плейлист доданий до черги",
           iconURL: client.config.iconURL,
         })
-        //.setAuthor("Playlist added to queue", client.config.iconURL)
         .setThumbnail(res.tracks[0].thumbnail)
         .setDescription(`[${res.playlist.name}](${query})`)
         .addField("Додано в чергу", `\`${res.tracks.length}\` пісень`, false)
         .addField(
           "Тривалість плейлиста",
-          `\`${client.ms(res.playlist.duration, {
-            colonNotation: true,
-          })}\``,
+          `\`${client.ms(res.playlist.duration, { colonNotation: true })}\``,
           false
         );
+
       return interaction
         .editReply({ embeds: [playlistEmbed] })
         .catch(this.warn);

@@ -4,7 +4,7 @@ const SlashCommand = require("../../lib/SlashCommand");
 
 const command = new SlashCommand()
   .setName("247")
-  .setDescription("режим програвання 24/7")
+  .setDescription("Не дозволяє боту відключатись від голосового каналу (вкл/викл)")
   .setRun(async (client, interaction, options) => {
     let channel = await client.getChannel(client, interaction);
     if (!channel) return;
@@ -17,7 +17,7 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setColor("RED")
-            .setDescription("Lavalink node is not connected"),
+            .setDescription("Немає з\'єднання з нодою Lavalink"),
         ],
       });
 
@@ -26,7 +26,7 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setColor("RED")
-            .setDescription("There's nothing to play 24/7."),
+            .setDescription("Немає що грати 24/7"),
         ],
         ephemeral: true,
       });
@@ -37,14 +37,14 @@ const command = new SlashCommand()
     );
     const twentyFourSeven = player.get("twentyFourSeven");
 
-    if (!player.twentyFourSeven || player.twentyFourSeven === false) {
+    if (!twentyFourSeven || twentyFourSeven === false) {
       player.set("twentyFourSeven", true);
     } else {
       player.set("twentyFourSeven", false);
     }
 
     twentyFourSevenEmbed.setDescription(
-      `✅ | **24/7 mode is \`${!player.twentyFourSeven ? "ON" : "OFF"}**\``
+      `✅ | **Режим 24/7 \`${!twentyFourSeven ? "увімкнений" : "вимкнений"}\`**`
     );
     client.warn(
       `Player: ${player.options.guild} | [${colors.blue(
@@ -58,6 +58,8 @@ const command = new SlashCommand()
       }`
     );
 
+    if (!player.playing && player.queue.totalSize === 0) player.destroy();
+
     return interaction.reply({ embeds: [twentyFourSevenEmbed] });
   });
 module.exports = command;
@@ -66,3 +68,4 @@ module.exports = command;
 // the above message meaning error, if it cant find it or take too long the bot crashed
 // play commanddddd, if timeout or takes 1000 years to find song it crashed
 // OKIE, leave the comment here for idk
+// Comment very useful, 247 good :+1:

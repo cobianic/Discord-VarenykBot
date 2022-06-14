@@ -109,7 +109,7 @@ const command = new SlashCommand()
           `[${res.tracks[0].title}](${res.tracks[0].uri})` || "Без назви"
         )
         .setURL(res.tracks[0].uri)
-        .addField("Додав", `<@${interaction.user.id}>`, true)
+        .addField("Автор", res.tracks[0].author, true)
         .addField(
           "Тривалість",
           res.tracks[0].isStream

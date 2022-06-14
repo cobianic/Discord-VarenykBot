@@ -204,7 +204,7 @@ const command = new SlashCommand()
             const embedFour = new MessageEmbed()
               .setColor(client.config.embedColor)
               .setDescription(
-                `**♪ | Зараз грає:** [${song.title}](${song.uri}) [${player.queue.current.requester}]\n\n**Далі:**\n${pages[page]}`
+                `**♪ | Зараз грає:** [${song.title}](${song.uri}) \n\n**Далі:**\n${pages[page]}`
               )
               .addFields(
                 {
@@ -247,7 +247,7 @@ const command = new SlashCommand()
             const embedFive = new MessageEmbed()
               .setColor(client.config.embedColor)
               .setDescription(
-                `**♪ | Зараз грає:** [${song.title}](${song.uri}) [${player.queue.current.requester}]\n\n**Далі:**\n${pages[page]}`
+                `**♪ | Зараз грає:** [${song.title}](${song.uri}) \n\n**Далі:**\n${pages[page]}`
               )
               .addFields(
                 {

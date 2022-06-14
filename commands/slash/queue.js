@@ -75,7 +75,9 @@ const command = new SlashCommand()
       });
     } else {
       const mapping = player.queue.map(
-        (t, i) => `\` ${++i} \` [${t.title}](${t.uri}) [${t.requester}]`
+        (t, i) => `\` ${++i} \` [${t.title}](${t.uri})\u00A0\u00A0[${pms(t.duration, {
+          colonNotation: true,
+        })}]`
       );
 
       const chunk = load.chunk(mapping, 10);
@@ -91,7 +93,7 @@ const command = new SlashCommand()
         const embedTwo = new MessageEmbed()
           .setColor(client.config.embedColor)
           .setDescription(
-            `**♪ | Now playing:** [${song.title}](${song.uri}) [${player.queue.current.requester}]\n\n**Queued Tracks**\n${pages[page]}`
+            `**♪ | Now playing:** [${song.title}](${song.uri}) \n\n**Queued Tracks**\n${pages[page]}`
           )
           .addFields(
             {
@@ -131,7 +133,7 @@ const command = new SlashCommand()
         const embedThree = new MessageEmbed()
           .setColor(client.config.embedColor)
           .setDescription(
-            `**♪ | Now playing:** [${song.title}](${song.uri}) [${player.queue.current.requester}]\n\n**Queued Tracks**\n${pages[page]}`
+            `**♪ | Now playing:** [${song.title}](${song.uri}) \n\n**Queued Tracks**\n${pages[page]}`
           )
           .addFields(
             {

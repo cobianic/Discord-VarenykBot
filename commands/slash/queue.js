@@ -5,7 +5,7 @@ const pms = require("pretty-ms");
 
 const command = new SlashCommand()
   .setName("queue")
-  .setDescription("Shows the current queue")
+  .setDescription("Показує чергу")
 
   .setRun(async (client, interaction, options) => {
     let channel = await client.getChannel(client, interaction);
@@ -19,7 +19,7 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setColor("RED")
-            .setDescription("Lavalink node is not connected"),
+            .setDescription("Немає з'єднання з нодою Lavalink"),
         ],
       });
 
@@ -28,7 +28,7 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setColor("RED")
-            .setDescription("There are no songs in the queue."),
+            .setDescription("Черга пуста"),
         ],
         ephemeral: true,
       });
@@ -36,8 +36,8 @@ const command = new SlashCommand()
 
     if (!player.playing) {
       const queueEmbed = new MessageEmbed()
-        .setColor(client.config.embedColor)
-        .setDescription("There's nothing playing.");
+        .setColor("RED")
+        .setDescription("Нічого не грає");
       return interaction.reply({ embeds: [queueEmbed], ephemeral: true });
     }
 
@@ -47,10 +47,10 @@ const command = new SlashCommand()
       let song = player.queue.current;
       const embed = new MessageEmbed()
         .setColor(client.config.embedColor)
-        .setDescription(`**♪ | Now playing:** [${song.title}](${song.uri})`)
+        .setDescription(`**♪ | Зараз грає:** [${song.title}](${song.uri})`)
         .addFields(
           {
-            name: "Duration",
+            name: "Тривалість",
             value: `\`${pms(player.position, { colonNotation: true })} / ${pms(
               player.queue.current.duration,
               { colonNotation: true }
@@ -58,12 +58,12 @@ const command = new SlashCommand()
             inline: true,
           },
           {
-            name: "Volume",
+            name: "Гучність",
             value: `\`${player.volume}\``,
             inline: true,
           },
           {
-            name: "Total Tracks",
+            name: "Треків в черзі",
             value: `\`${player.queue.totalSize - 1}\``,
             colonNotation: true,
             inline: true,
@@ -93,11 +93,11 @@ const command = new SlashCommand()
         const embedTwo = new MessageEmbed()
           .setColor(client.config.embedColor)
           .setDescription(
-            `**♪ | Now playing:** [${song.title}](${song.uri}) \n\n**Queued Tracks**\n${pages[page]}`
+            `**♪ | Зараз грає:** [${song.title}](${song.uri}) \n\n**Далі:**\n${pages[page]}`
           )
           .addFields(
             {
-              name: "Track Duration",
+              name: "Тривалість",
               value: `\`${pms(player.position, {
                 colonNotation: true,
               })} / ${pms(player.queue.current.duration, {
@@ -106,21 +106,21 @@ const command = new SlashCommand()
               inline: true,
             },
             {
-              name: "Total Tracks Duration",
+              name: "Загальна тривалість черги",
               value: `\`${pms(player.queue.duration, {
                 colonNotation: true,
               })}\``,
               inline: true,
             },
             {
-              name: "Total Tracks",
+              name: "Загалом треків",
               value: `\`${player.queue.totalSize - 1}\``,
               colonNotation: true,
               inline: true,
             }
           )
           .setFooter({
-            text: `Page ${page + 1}/${pages.length}`,
+            text: `Сторінка ${page + 1}/${pages.length}`,
           });
 
         await interaction
@@ -133,11 +133,11 @@ const command = new SlashCommand()
         const embedThree = new MessageEmbed()
           .setColor(client.config.embedColor)
           .setDescription(
-            `**♪ | Now playing:** [${song.title}](${song.uri}) \n\n**Queued Tracks**\n${pages[page]}`
+            `**♪ | Зараз грає:** [${song.title}](${song.uri}) \n\n**Далі:**\n${pages[page]}`
           )
           .addFields(
             {
-              name: "Track Duration",
+              name: "Тривалість",
               value: `\`${pms(player.position, {
                 colonNotation: true,
               })} / ${pms(player.queue.current.duration, {
@@ -146,21 +146,21 @@ const command = new SlashCommand()
               inline: true,
             },
             {
-              name: "Total Tracks Duration",
+              name: "Загальна тривалість черги",
               value: `\`${pms(player.queue.duration, {
                 colonNotation: true,
               })}\``,
               inline: true,
             },
             {
-              name: "Total Tracks",
+              name: "Загалом треків",
               value: `\`${player.queue.totalSize - 1}\``,
               colonNotation: true,
               inline: true,
             }
           )
           .setFooter({
-            text: `Page ${page + 1}/${pages.length}`,
+            text: `Сторінка ${page + 1}/${pages.length}`,
           });
 
         const buttonOne = new MessageButton()
@@ -187,7 +187,7 @@ const command = new SlashCommand()
             else
               return b
                 .reply({
-                  content: `Only **${interaction.user.tag}** can use this button.`,
+                  content: `Тільки **${interaction.user.tag}** може використати цю кнопку`,
                   ephemeral: true,
                 })
                 .catch(() => {});
@@ -204,11 +204,11 @@ const command = new SlashCommand()
             const embedFour = new MessageEmbed()
               .setColor(client.config.embedColor)
               .setDescription(
-                `**♪ | Now playing:** [${song.title}](${song.uri}) [${player.queue.current.requester}]\n\n**Queued Tracks**\n${pages[page]}`
+                `**♪ | Зараз грає:** [${song.title}](${song.uri}) [${player.queue.current.requester}]\n\n**Далі:**\n${pages[page]}`
               )
               .addFields(
                 {
-                  name: "Track Duration",
+                  name: "Тривалість",
                   value: `\`${pms(player.position, {
                     colonNotation: true,
                   })} / ${pms(player.queue.current.duration, {
@@ -217,21 +217,21 @@ const command = new SlashCommand()
                   inline: true,
                 },
                 {
-                  name: "Total Tracks Duration",
+                  name: "Загальна тривалість черги",
                   value: `\`${pms(player.queue.duration, {
                     colonNotation: true,
                   })}\``,
                   inline: true,
                 },
                 {
-                  name: "Total Tracks",
+                  name: "Загалом треків",
                   value: `\`${player.queue.totalSize - 1}\``,
                   colonNotation: true,
                   inline: true,
                 }
               )
               .setFooter({
-                text: `Page ${page + 1}/${pages.length}`,
+                text: `Сторінка ${page + 1}/${pages.length}`,
               });
 
             await interaction.editReply({
@@ -247,11 +247,11 @@ const command = new SlashCommand()
             const embedFive = new MessageEmbed()
               .setColor(client.config.embedColor)
               .setDescription(
-                `**♪ | Now playing:** [${song.title}](${song.uri}) [${player.queue.current.requester}]\n\n**Queued Tracks**\n${pages[page]}`
+                `**♪ | Зараз грає:** [${song.title}](${song.uri}) [${player.queue.current.requester}]\n\n**Далі:**\n${pages[page]}`
               )
               .addFields(
                 {
-                  name: "Track Duration",
+                  name: "Тривалість",
                   value: `\`${pms(player.position, {
                     colonNotation: true,
                   })} / ${pms(player.queue.current.duration, {
@@ -260,21 +260,21 @@ const command = new SlashCommand()
                   inline: true,
                 },
                 {
-                  name: "Total Tracks Duration",
+                  name: "Загальна тривалість черги",
                   value: `\`${pms(player.queue.duration, {
                     colonNotation: true,
                   })}\``,
                   inline: true,
                 },
                 {
-                  name: "Total Tracks",
+                  name: "Загалом треків",
                   value: `\`${player.queue.totalSize - 1}\``,
                   colonNotation: true,
                   inline: true,
                 }
               )
               .setFooter({
-                text: `Page ${page + 1}/${pages.length}`,
+                text: `Сторінка ${page + 1}/${pages.length}`,
               });
 
             await interaction

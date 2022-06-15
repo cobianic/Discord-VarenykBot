@@ -38,7 +38,7 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setColor("RED")
-            .setDescription("Lavalink node is not connected"),
+            .setDescription("Немає з'єднання з нодою Lavalink"),
         ],
       });
 
@@ -47,7 +47,7 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setColor("RED")
-            .setDescription("There's no music playing."),
+            .setDescription("Нічого не грає"),
         ],
         ephemeral: true,
       });
@@ -57,40 +57,40 @@ const command = new SlashCommand()
     let thing = new MessageEmbed().setColor(client.config.embedColor);
 
     if (args == "nightcore") {
-      thing.setDescription("✅ | Nightcore filter is now active!");
+      thing.setDescription("✅ | Фільтр Nightcore увімкнений!");
       player.nightcore = true;
     } else if (args == "bassboost") {
-      thing.setDescription("✅ | BassBoost filter is now on!");
+      thing.setDescription("✅ | Фільтр BassBoost увімкнений!");
       player.bassboost = true;
     } else if (args == "vaporwave") {
-      thing.setDescription("✅ | Vaporwave filter is now on!");
+      thing.setDescription("✅ | Фільтр Vaporwave увімкнений!");
       player.vaporwave = true;
     } else if (args == "pop") {
-      thing.setDescription("✅ | Pop filter is now on!");
+      thing.setDescription("✅ | Фільтр Pop увімкнений!");
       player.pop = true;
     } else if (args == "soft") {
-      thing.setDescription("✅ | Soft filter is now on!");
+      thing.setDescription("✅ | Фільтр Soft увімкнений!");
       player.soft = true;
     } else if (args == "treblebass") {
-      thing.setDescription("✅ | Treblebass filter is now on!");
+      thing.setDescription("✅ | Фільтр Treblebass увімкнений!");
       player.treblebass = true;
     } else if (args == "eightD") {
-      thing.setDescription("✅ | Eight Dimension filter is now on!");
+      thing.setDescription("✅ | Фільтр Eight Dimension увімкнений!");
       player.eightD = true;
     } else if (args == "karaoke") {
-      thing.setDescription("✅ | Karaoke filter is now on!");
+      thing.setDescription("✅ | Фільтр Karaoke увімкнений!");
       player.karaoke = true;
     } else if (args == "vibrato") {
-      thing.setDescription("✅ | Vibrato filter is now on!");
+      thing.setDescription("✅ | Фільтр Vibrato увімкнений!");
       player.vibrato = true;
     } else if (args == "tremolo") {
-      thing.setDescription("✅ | Tremolo filter is now on!");
+      thing.setDescription("✅ | Фільтр Tremolo увімкнений!");
       player.tremolo = true;
     } else if (args == "off") {
-      thing.setDescription("✅ | EQ has been cleared!");
+      thing.setDescription("✅ | Еквалайзер очищений");
       player.reset();
     } else {
-      thing.setDescription("❌ | Invalid filter!");
+      thing.setDescription("❌ | Неправильний фільтр");
     }
 
     return interaction.reply({ embeds: [thing] });

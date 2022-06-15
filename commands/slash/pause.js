@@ -3,7 +3,7 @@ const { MessageEmbed } = require("discord.js");
 
 const command = new SlashCommand()
   .setName("pause")
-  .setDescription("Pauses the current playing track")
+  .setDescription("Ставить музику на паузу")
   .setRun(async (client, interaction, options) => {
     let channel = await client.getChannel(client, interaction);
     if (!channel) return;
@@ -16,7 +16,7 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setColor("RED")
-            .setDescription("Lavalink node is not connected"),
+            .setDescription("Немає з'єднання з нодою Lavalink"),
         ],
       });
 
@@ -25,7 +25,7 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setColor("RED")
-            .setDescription("Nothing is playing."),
+            .setDescription("Нічого не грає"),
         ],
         ephemeral: true,
       });
@@ -36,7 +36,7 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setColor("RED")
-            .setDescription("Current playing track is already paused!"),
+            .setDescription("Музика вже на паузі"),
         ],
         ephemeral: true,
       });
@@ -47,7 +47,7 @@ const command = new SlashCommand()
       embeds: [
         new MessageEmbed()
           .setColor(client.config.embedColor)
-          .setDescription(`⏸ | **Paused!**`),
+          .setDescription(`⏸ | **На паузі!**`),
       ],
     });
   });

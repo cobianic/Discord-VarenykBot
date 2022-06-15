@@ -3,11 +3,11 @@ const SlashCommand = require("../../lib/SlashCommand");
 
 const command = new SlashCommand()
   .setName("filters")
-  .setDescription("add or remove filters")
+  .setDescription("додає або видаляє фільтри")
   .addStringOption((option) =>
     option
       .setName("preset")
-      .setDescription("the preset to add")
+      .setDescription("який фільтр додати?")
       .setRequired(true)
       .addChoices(
         { name: "Nightcore", value: "nightcore" },

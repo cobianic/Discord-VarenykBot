@@ -8,11 +8,11 @@ const {
 
 const command = new SlashCommand()
   .setName("search")
-  .setDescription("Search for a song")
+  .setDescription("Шукає музику")
   .addStringOption((option) =>
     option
-      .setName("query")
-      .setDescription("The song to search for")
+      .setName("запит")
+      .setDescription("Пісня, яку потрібно знайти")
       .setRequired(true)
   )
   .setRun(async (client, interaction, options) => {
@@ -27,7 +27,7 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setColor("RED")
-            .setDescription("Lavalink node is not connected"),
+            .setDescription("Немає з'єднання з нодою Lavalink"),
         ],
       });
     await interaction.deferReply().catch((_) => {});
@@ -36,7 +36,7 @@ const command = new SlashCommand()
       player.connect();
     }
 
-    const search = interaction.options.getString("query");
+    const search = interaction.options.getString("запит");
     let res;
 
     try {
@@ -45,7 +45,7 @@ const command = new SlashCommand()
         return interaction.reply({
           embeds: [
             new MessageEmbed()
-              .setDescription("An error occured while searching for the song")
+              .setDescription("Протягом пошуку відбулась помилка")
               .setColor("RED"),
           ],
           ephemeral: true,
@@ -56,7 +56,7 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setAuthor({
-              name: "An error occured while searching for the song",
+              name: "Протягом пошуку відбулась помилка",
             })
             .setColor("RED"),
         ],
@@ -68,7 +68,7 @@ const command = new SlashCommand()
       return interaction.reply({
         embeds: [
           new MessageEmbed()
-            .setDescription(`No results found for \`${search}\``)
+            .setDescription(`Нічого не знайдено для \`${search}\``)
             .setColor("RED"),
         ],
         ephemeral: true,
@@ -84,7 +84,7 @@ const command = new SlashCommand()
           label: `${track.title}`,
           value: `${track.uri}`,
           description: track.isStream
-            ? `LIVE`
+            ? `стрім`
             : `${prettyMilliseconds(track.duration, {
               secondsDecimalDigits: 0,
             })} - ${track.author}`,
@@ -93,8 +93,8 @@ const command = new SlashCommand()
 
       const menus = new MessageActionRow().addComponents(
         new MessageSelectMenu()
-          .setCustomId("select")
-          .setPlaceholder("Select a song")
+          .setCustomId("вибір")
+          .setPlaceholder("Вибрати пісню")
           .addOptions(resultFromSearch)
       );
 
@@ -103,7 +103,7 @@ const command = new SlashCommand()
           new MessageEmbed()
             .setColor(client.config.embedColor)
             .setDescription(
-              `Here are some of the results I found for \`${search}\`. Please select track within \`30 seconds\``
+              `Ось деякі з результатів для \`${search}\`. Будь ласка, виберіть пісню протягом \`30 секунд\``
             ),
         ],
         components: [menus],
@@ -145,20 +145,20 @@ const command = new SlashCommand()
             embeds: [
               new MessageEmbed()
                 .setAuthor({
-                  name: "Added to queue",
+                  name: "Додано до черги",
                   iconURL: client.config.iconURL,
                 })
                 .setURL(res.tracks[0].uri)
                 .setThumbnail(res.tracks[0].displayThumbnail("maxresdefault"))
                 .setDescription(
                   `[${trackForPlay?.tracks[0]?.title}](${trackForPlay?.tracks[0].uri})` ||
-                    "No Title"
+                    "Без назви"
                 )
-                .addField("Added by", `<@${interaction.user.id}>`, true)
+                .addField("Автор", trackForPlay?.tracks[0].author, true)
                 .addField(
-                  "Duration",
+                  "Тривалість",
                   res.tracks[0].isStream
-                    ? `\`LIVE\``
+                    ? `\`стрім\``
                     : `\`${client.ms(res.tracks[0].duration, {
                         colonNotation: true,
                       })}\``,
@@ -177,7 +177,7 @@ const command = new SlashCommand()
             embeds: [
               new MessageEmbed()
                 .setDescription(
-                  `No track selected. You took too long to select a track.`
+                  `Ви занадто довго вибирали пісню,час закінчився`
                 )
                 .setColor(client.config.embedColor),
             ],

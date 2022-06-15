@@ -8,7 +8,7 @@ const command = new SlashCommand()
   // get user input
   .addStringOption((option) =>
     option
-      .setName("song")
+      .setName("пісня")
       .setDescription("Пісня, для якої потрібен текст")
       .setRequired(false)
   )
@@ -33,7 +33,7 @@ const command = new SlashCommand()
         ],
       });
 
-    const args = interaction.options.getString("song");
+    const args = interaction.options.getString("пісня");
     if (!args && !player)
       return interaction.editReply({
         embeds: [

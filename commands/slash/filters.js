@@ -6,7 +6,7 @@ const command = new SlashCommand()
   .setDescription("додає або видаляє фільтри")
   .addStringOption((option) =>
     option
-      .setName("preset")
+      .setName("пресет")
       .setDescription("який фільтр додати?")
       .setRequired(true)
       .addChoices(
@@ -25,7 +25,7 @@ const command = new SlashCommand()
   )
 
   .setRun(async (client, interaction, options) => {
-    const args = interaction.options.getString("preset");
+    const args = interaction.options.getString("пресет");
 
     let channel = await client.getChannel(client, interaction);
     if (!channel) return;

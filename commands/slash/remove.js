@@ -3,16 +3,16 @@ const { MessageEmbed } = require("discord.js");
 
 const command = new SlashCommand()
   .setName("remove")
-  .setDescription("Remove track you don't want from queue")
+  .setDescription("Видаляє небажаний трек з черги")
   .addNumberOption((option) =>
     option
-      .setName("number")
-      .setDescription("Enter track number.")
+      .setName("номер")
+      .setDescription("Введіть номер треку")
       .setRequired(true)
   )
 
   .setRun(async (client, interaction) => {
-    const args = interaction.options.getNumber("number");
+    const args = interaction.options.getNumber("номер");
 
     let channel = await client.getChannel(client, interaction);
     if (!channel) return;
@@ -25,7 +25,7 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setColor("RED")
-            .setDescription("Lavalink node is not connected"),
+            .setDescription("Немає з'єднання з нодою Lavalink"),
         ],
       });
 
@@ -34,7 +34,7 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setColor("RED")
-            .setDescription("There are no songs to remove."),
+            .setDescription("Немає чого видаляти"),
         ],
         ephemeral: true,
       });
@@ -47,7 +47,7 @@ const command = new SlashCommand()
       let thing = new MessageEmbed()
         .setColor(client.config.embedColor)
         .setDescription(
-          `Current queue has only **${player.queue.size}** track`
+          `Зараз черга містить тільки **${player.queue.size}** треки`
         );
       return interaction.editReply({ embeds: [thing] });
     }
@@ -58,7 +58,7 @@ const command = new SlashCommand()
     const number = position + 1;
     let thing = new MessageEmbed()
       .setColor(client.config.embedColor)
-      .setDescription(`Removed track number **${number}** from queue`);
+      .setDescription(`Видалено трек номер **${number}** з черги`);
     return interaction.editReply({ embeds: [thing] });
   });
 

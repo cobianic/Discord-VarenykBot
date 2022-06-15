@@ -51,7 +51,7 @@ const command = new SlashCommand()
       .setFields([
         {
           name: "Автор",
-          value: res.tracks[0].author,
+          value: song.author,
           inline: true,
         },
         // show duration, if live show live

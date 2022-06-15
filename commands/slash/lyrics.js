@@ -4,12 +4,12 @@ const fetch = require("node-fetch");
 
 const command = new SlashCommand()
   .setName("lyrics")
-  .setDescription("Prints the lyrics of a song")
+  .setDescription("Знаходить текст пісні")
   // get user input
   .addStringOption((option) =>
     option
       .setName("song")
-      .setDescription("The song to get lyrics for")
+      .setDescription("Пісня, для якої потрібен текст")
       .setRequired(false)
   )
   .setRun(async (client, interaction, options) => {
@@ -17,7 +17,7 @@ const command = new SlashCommand()
       embeds: [
         new MessageEmbed()
           .setColor(client.config.embedColor)
-          .setDescription("🔎 **Searching...**"),
+          .setDescription("🔎 **Шукаю...**"),
       ],
     });
 
@@ -29,7 +29,7 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setColor("RED")
-            .setDescription("Lavalink node is not connected"),
+            .setDescription("Немає з'єднання з нодою Lavalink"),
         ],
       });
 
@@ -39,7 +39,7 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setColor("RED")
-            .setDescription("There's nothing playing"),
+            .setDescription("Нічого не грає"),
         ],
       });
 
@@ -60,7 +60,7 @@ const command = new SlashCommand()
           new MessageEmbed()
             .setColor("RED")
             .setDescription(
-              `❌ | No lyrics found for ${search}!\nMake sure you typed in your search correctly.`
+              `❌ | Текст для ${search} не знайдений!\nПереконайтесь, що ви ввели правильні дані.`
             ),
         ],
       });
@@ -78,7 +78,7 @@ const command = new SlashCommand()
       text = text.substring(0, 4090) + "[...]";
       lyricsEmbed
         .setDescription(text)
-        .setFooter({ text: "Truncated, the lyrics were too long." });
+        .setFooter({ text: "Текст обрізаний, бо він занадто довгий" });
     }
 
     return interaction.editReply({ embeds: [lyricsEmbed] });

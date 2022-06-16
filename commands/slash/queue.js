@@ -47,8 +47,7 @@ const command = new SlashCommand()
       let song = player.queue.current;
       const embed = new MessageEmbed()
         .setColor(client.config.embedColor)
-        .setDescription(
-          `**♪ | Зараз грає:** [${song.title}](${song.uri})` || "Без назви")
+        .setDescription(`**♪ | Зараз грає:** [${song.title}](${song.uri})`)
         .addFields(
           {
             name: "Тривалість",
@@ -101,9 +100,10 @@ const command = new SlashCommand()
           .addFields(
             {
               name: "Тривалість",
-              value: `\`${pms(player.position, {
-                colonNotation: true,
-              })} / ${pms(player.queue.current.duration, {
+              value: song.isStream
+                ? `\`стрім\``
+                : `\`${pms(player.position, { colonNotation: true })} / ${pms(
+                  player.queue.current.duration, {
                 colonNotation: true,
               })}\``,
               inline: true,
@@ -141,9 +141,10 @@ const command = new SlashCommand()
           .addFields(
             {
               name: "Тривалість",
-              value: `\`${pms(player.position, {
-                colonNotation: true,
-              })} / ${pms(player.queue.current.duration, {
+              value: song.isStream
+                ? `\`стрім\``
+                : `\`${pms(player.position, { colonNotation: true })} / ${pms(
+                  player.queue.current.duration, {
                 colonNotation: true,
               })}\``,
               inline: true,
@@ -212,9 +213,10 @@ const command = new SlashCommand()
               .addFields(
                 {
                   name: "Тривалість",
-                  value: `\`${pms(player.position, {
-                    colonNotation: true,
-                  })} / ${pms(player.queue.current.duration, {
+                  value: song.isStream
+                    ? `\`стрім\``
+                    : `\`${pms(player.position, { colonNotation: true })} / ${pms(
+                      player.queue.current.duration, {
                     colonNotation: true,
                   })}\``,
                   inline: true,
@@ -255,9 +257,10 @@ const command = new SlashCommand()
               .addFields(
                 {
                   name: "Тривалість",
-                  value: `\`${pms(player.position, {
-                    colonNotation: true,
-                  })} / ${pms(player.queue.current.duration, {
+                  value: song.isStream
+                    ? `\`стрім\``
+                    : `\`${pms(player.position, { colonNotation: true })} / ${pms(
+                      player.queue.current.duration, {
                     colonNotation: true,
                   })}\``,
                   inline: true,

@@ -4,7 +4,7 @@ const { MessageEmbed } = require("discord.js");
 const command = new SlashCommand()
   .setName("play")
   .setDescription(
-    "Шукає і грає пісні\n__Підтримує:__\nYoutube, Spotify, Deezer, Apple Music"
+    "Шукає і грає пісні з Youtube, Spotify, Deezer, Apple Music"
   )
   .addStringOption((option) =>
     option

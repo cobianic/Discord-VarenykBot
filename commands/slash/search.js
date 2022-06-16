@@ -177,7 +177,7 @@ const command = new SlashCommand()
             embeds: [
               new MessageEmbed()
                 .setDescription(
-                  `Ви занадто довго вибирали пісню,час закінчився`
+                  `Ви занадто довго вибирали пісню, час закінчився`
                 )
                 .setColor(client.config.embedColor),
             ],

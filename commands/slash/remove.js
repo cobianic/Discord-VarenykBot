@@ -47,7 +47,7 @@ const command = new SlashCommand()
       let thing = new MessageEmbed()
         .setColor(client.config.embedColor)
         .setDescription(
-          `Зараз черга містить тільки **${player.queue.size}** треки`
+          `Зараз черга містить тільки **${player.queue.size}** треків`
         );
       return interaction.editReply({ embeds: [thing] });
     }

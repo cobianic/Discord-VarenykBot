@@ -11,7 +11,7 @@ const { filter } = require("lodash");
 
 const command = new SlashCommand()
   .setName("help")
-  .setDescription("Shows this list")
+  .setDescription("Показує список команд")
   .setRun(async (client, interaction) => {
     await interaction.deferReply().catch((_) => {});
     // map the commands name and description to the embed
@@ -44,11 +44,11 @@ const command = new SlashCommand()
     const helpEmbed = new MessageEmbed()
       .setColor(client.config.embedColor)
       .setAuthor({
-        name: `Commands of ${client.user.username}`,
+        name: `Команди, яким навчився ${client.user.username}`,
         iconURL: client.config.iconURL,
       })
-      .setTimestamp()
-      .setFooter({ text: `Page ${pageNo + 1} / ${maxPages}` });
+      //.setTimestamp()
+      .setFooter({ text: `Сторінка ${pageNo + 1} / ${maxPages}` });
 
     // initial temporary array
     var tempArray = filteredCommands.slice(
@@ -59,14 +59,14 @@ const command = new SlashCommand()
     tempArray.forEach((cmd) => {
       helpEmbed.addField(cmd.name, cmd.description);
     });
-    helpEmbed.addField(
-      "Credits",
-      `Discord Music Bot Version: v${
-        require("../../package.json").version
-      }; Build: ${gitHash}` +
-        "\n" +
-        `[✨ Support Server](${client.config.supportServer}) | [Issues](${client.config.Issues}) | [Source](https://github.com/SudhanPlayz/Discord-MusicBot/tree/v5) | [Invite Me](https://discord.com/oauth2/authorize?client_id=${client.config.clientId}&permissions=${client.config.permissions}&scope=bot%20applications.commands)`
-    );
+    // helpEmbed.addField(
+    //   "Credits",
+    //   `Discord Music Bot Version: v${
+    //     require("../../package.json").version
+    //   }; Build: ${gitHash}` +
+    //     "\n" +
+    //     `[✨ Support Server](${client.config.supportServer}) | [Issues](${client.config.Issues}) | [Source](https://github.com/SudhanPlayz/Discord-MusicBot/tree/v5) | [Invite Me](https://discord.com/oauth2/authorize?client_id=${client.config.clientId}&permissions=${client.config.permissions}&scope=bot%20applications.commands)`
+    // );
 
     // Construction of the buttons for the embed
     const getButtons = (pageNo) => {
@@ -112,16 +112,16 @@ const command = new SlashCommand()
         //console.log(cmd);
         helpEmbed
           .addField(cmd.name, cmd.description)
-          .setFooter({ text: `Page ${pageNo + 1} / ${maxPages}` });
+          .setFooter({ text: `Сторінка ${pageNo + 1} / ${maxPages}` });
       });
-      helpEmbed.addField(
-        "Credits",
-        `Discord Music Bot Version: v${
-          require("../../package.json").version
-        }; Build: ${gitHash}` +
-          "\n" +
-          `[✨ Support Server](${client.config.supportServer}) | [Issues](${client.config.Issues}) | [Source](https://github.com/SudhanPlayz/Discord-MusicBot/tree/v5) | [Invite Me](https://discord.com/oauth2/authorize?client_id=${client.config.clientId}&permissions=${client.config.permissions}&scope=bot%20applications.commands)`
-      );
+      // helpEmbed.addField(
+      //   "Credits",
+      //   `Discord Music Bot Version: v${
+      //     require("../../package.json").version
+      //   }; Build: ${gitHash}` +
+      //     "\n" +
+      //     `[✨ Support Server](${client.config.supportServer}) | [Issues](${client.config.Issues}) | [Source](https://github.com/SudhanPlayz/Discord-MusicBot/tree/v5) | [Invite Me](https://discord.com/oauth2/authorize?client_id=${client.config.clientId}&permissions=${client.config.permissions}&scope=bot%20applications.commands)`
+      // );
       await iter.update({
         embeds: [helpEmbed],
         components: [getButtons(pageNo)],

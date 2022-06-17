@@ -59,11 +59,12 @@ const command = new SlashCommand()
             )}\``,
             inline: true,
           },
-          {
-            name: "Гучність",
-            value: `\`${player.volume}\``,
-            inline: true,
-          },
+          // Volume not needed here
+          // {
+          //   name: "Гучність",
+          //   value: `\`${player.volume}\``,
+          //   inline: true,
+          // },
           {
             name: "Треків в черзі",
             value: `\`${player.queue.totalSize - 1}\``,

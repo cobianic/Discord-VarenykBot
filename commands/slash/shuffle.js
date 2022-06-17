@@ -3,7 +3,7 @@ const { MessageEmbed } = require("discord.js");
 
 const command = new SlashCommand()
   .setName("shuffle")
-  .setDescription("Randomizes the queue")
+  .setDescription("Перемішує чергу")
   .setRun(async (client, interaction, options) => {
     let channel = await client.getChannel(client, interaction);
     if (!channel) return;
@@ -16,7 +16,7 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setColor("RED")
-            .setDescription("Lavalink node is not connected"),
+            .setDescription("Немає з\'єднання з нодою Lavalink"),
         ],
       });
 
@@ -25,7 +25,7 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setColor("RED")
-            .setDescription("There is no music playing."),
+            .setDescription("Нічого не грає"),
         ],
         ephemeral: true,
       });
@@ -36,7 +36,7 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setColor("RED")
-            .setDescription("There are not enough songs in the queue."),
+            .setDescription("В черзі замало пісень"),
         ],
         ephemeral: true,
       });
@@ -48,7 +48,7 @@ const command = new SlashCommand()
       embeds: [
         new MessageEmbed()
           .setColor(client.config.embedColor)
-          .setDescription("🔀 | **Successfully shuffled the queue.**"),
+          .setDescription("🔀 | **Черга перемішалась**"),
       ],
     });
   });

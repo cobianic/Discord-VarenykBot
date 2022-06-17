@@ -3,7 +3,7 @@ const { MessageEmbed } = require("discord.js");
 
 const command = new SlashCommand()
   .setName("skip")
-  .setDescription("Skip the current song")
+  .setDescription("Пропускає трек, що грає зараз")
   .setRun(async (client, interaction, options) => {
     let channel = await client.getChannel(client, interaction);
     if (!channel) return;
@@ -16,7 +16,7 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setColor("RED")
-            .setDescription("Lavalink node is not connected"),
+            .setDescription("Немає з\'єднання з нодою Lavalink"),
         ],
       });
 
@@ -25,7 +25,7 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setColor("RED")
-            .setDescription("There is nothing to skip."),
+            .setDescription("Немає чого пропускати"),
         ],
         ephemeral: true,
       });
@@ -38,7 +38,7 @@ const command = new SlashCommand()
       embeds: [
         new MessageEmbed()
           .setColor(client.config.embedColor)
-          .setDescription("✅ | **Skipped!**"),
+          .setDescription("✅ | **Пропущено!**"),
       ],
     });
   });

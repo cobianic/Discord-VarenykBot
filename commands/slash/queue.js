@@ -77,11 +77,25 @@ const command = new SlashCommand()
         embeds: [embed],
       });
     } else {
-      const mapping = player.queue.map(
-        (t, i) => `\` ${++i} \` [${t.title}](${t.uri})\u00A0\u00A0[${pms(t.duration, {
-          colonNotation: true,
-        })}]`
-      );
+      let queueDuration = player.queue.duration.valueOf()
+      if (player.queue.current.isStream) {
+        queueDuration -= player.queue.current.duration
+      }
+      for (let i = 0; i < player.queue.length; i++) {
+        if (player.queue[i].isStream) {
+          queueDuration -= player.queue[i].duration
+        }
+      }
+
+      const mapping = player.queue.map(function(t, i) {
+        if (t.isStream) {
+          return `\` ${++i} \` [${t.title}](${t.uri})\u00A0\u00A0(стрім)`
+        } else {
+          return `\` ${++i} \` [${t.title}](${t.uri})\u00A0\u00A0[${pms(t.duration, {
+            colonNotation: true,
+          })}]`
+        }
+      });
 
       const chunk = load.chunk(mapping, 10);
       const pages = chunk.map((s) => s.join("\n"));
@@ -111,7 +125,7 @@ const command = new SlashCommand()
             },
             {
               name: "Загальна тривалість черги",
-              value: `\`${pms(player.queue.duration, {
+              value: `\`${pms(queueDuration, {
                 colonNotation: true,
               })}\``,
               inline: true,
@@ -152,7 +166,7 @@ const command = new SlashCommand()
             },
             {
               name: "Загальна тривалість черги",
-              value: `\`${pms(player.queue.duration, {
+              value: `\`${pms(queueDuration, {
                 colonNotation: true,
               })}\``,
               inline: true,
@@ -224,7 +238,7 @@ const command = new SlashCommand()
                 },
                 {
                   name: "Загальна тривалість черги",
-                  value: `\`${pms(player.queue.duration, {
+                  value: `\`${pms(queueDuration, {
                     colonNotation: true,
                   })}\``,
                   inline: true,
@@ -268,7 +282,7 @@ const command = new SlashCommand()
                 },
                 {
                   name: "Загальна тривалість черги",
-                  value: `\`${pms(player.queue.duration, {
+                  value: `\`${pms(queueDuration, {
                     colonNotation: true,
                   })}\``,
                   inline: true,

@@ -5,39 +5,39 @@ const command = new SlashCommand()
   .setName("stop")
   .setDescription("Зупиняє музику і очищає чергу")
   .setRun(async (client, interaction, options) => {
-    let player = client.manager.players.get(interaction.guild.id);
-    if (!player)
+    let channel = await client.getChannel(client, interaction);
+    if (!channel) return;
+
+    let player;
+    if (client.manager)
+      player = client.manager.players.get(interaction.guild.id);
+    else
       return interaction.reply({
-        embeds: [client.ErrorEmbed("Зараз нічого не грає")],
+        embeds: [
+          new MessageEmbed()
+            .setColor("RED")
+            .setDescription("Немає з'єднання з нодою Lavalink"),
+        ],
       });
 
-    if (!interaction.member.voice.channel) {
-      const joinEmbed = new MessageEmbed()
-        .setColor("RED")
-        .setDescription(
-          "❌ | Хазяїн, ви не в голосовому каналі"
-        );
-      return interaction.reply({ embeds: [joinEmbed], ephemeral: true });
-    }
-
-    if (
-      interaction.guild.me.voice.channel &&
-      !interaction.guild.me.voice.channel.equals(
-        interaction.member.voice.channel
-      )
-    ) {
-      const sameEmbed = new MessageEmbed()
-        .setColor("RED")
-        .setDescription(
-          "❌ | Хазяїн, ви не в моєму голосовому каналі"
-        );
-      return interaction.reply({ embeds: [sameEmbed], ephemeral: true });
-    }
+    if (!player)
+      return interaction.reply({
+        embeds: [
+          new MessageEmbed()
+            .setColor("RED")
+            .setDescription("Я нічого не граю"),
+        ],
+        ephemeral: true,
+      });
 
     player.destroy();
 
     interaction.reply({
-      embeds: [client.Embed(`Від'єднався!`)],
+      embeds: [
+        new MessageEmbed()
+          .setColor(client.config.embedColor)
+          .setDescription(`Від'єднався!`),
+      ],
     });
   });
 

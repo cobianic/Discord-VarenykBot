@@ -3,7 +3,7 @@ const { MessageEmbed } = require("discord.js");
 
 const command = new SlashCommand()
   .setName("clear")
-  .setDescription("Clear all tracks from queue")
+  .setDescription("Видаляє чергу")
   .setRun(async (client, interaction, options) => {
     let channel = await client.getChannel(client, interaction);
     if (!channel) return;
@@ -16,7 +16,7 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setColor("RED")
-            .setDescription("Lavalink node is not connected"),
+            .setDescription("Немає з\'єднання з нодою Lavalink"),
         ],
       });
 
@@ -25,7 +25,7 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setColor("RED")
-            .setDescription("Nothing is playing right now."),
+            .setDescription("Нічого не грає"),
         ],
         ephemeral: true,
       });
@@ -33,8 +33,8 @@ const command = new SlashCommand()
 
     if (!player.queue || !player.queue.length || player.queue.length === 0) {
       let cembed = new MessageEmbed()
-        .setColor(client.config.embedColor)
-        .setDescription("❌ | **Invalid, Not enough track to be cleared.**");
+        .setColor("RED")
+        .setDescription("❌ | **Черга пуста**");
 
       return interaction.reply({ embeds: [cembed], ephemeral: true });
     }
@@ -43,7 +43,7 @@ const command = new SlashCommand()
 
     let clearembed = new MessageEmbed()
       .setColor(client.config.embedColor)
-      .setDescription(`✅ | **Cleared the queue!**`);
+      .setDescription(`✅ | **Черга очищена!**`);
 
     return interaction.reply({ embeds: [clearembed] });
   });

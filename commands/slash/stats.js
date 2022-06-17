@@ -6,7 +6,7 @@ const os = require("os");
 
 const command = new SlashCommand()
   .setName("stats")
-  .setDescription("Get information about the bot")
+  .setDescription("Технічна інформація")
   .setRun(async (client, interaction) => {
     // get OS info
     const osver = os.platform() + " " + os.release();
@@ -17,11 +17,11 @@ const command = new SlashCommand()
     // get the uptime in a human readable format
     const runtime = moment
       .duration(client.uptime)
-      .format("d[ Days]・h[ Hrs]・m[ Mins]・s[ Secs]");
+      .format("d[ дн]・h[ г]・m[ хв]・s[ с]");
     // show lavalink uptime in a nice format
     const lavauptime = moment
       .duration(client.manager.nodes.values().next().value.stats.uptime)
-      .format(" D[d], H[h], m[m]");
+      .format(" D[дн], H[г], m[хв]");
     // show lavalink memory usage in a nice format
     const lavaram = (
       client.manager.nodes.values().next().value.stats.memory.used /
@@ -37,7 +37,7 @@ const command = new SlashCommand()
     // show system uptime
     var sysuptime = moment
       .duration(os.uptime() * 1000)
-      .format("d[ Days]・h[ Hrs]・m[ Mins]・s[ Secs]");
+      .format("d[ дн]・h[ г]・m[ хв]・s[ с]");
 
     // get commit hash and date
     let gitHash = "unknown";
@@ -52,37 +52,35 @@ const command = new SlashCommand()
     }
 
     const statsEmbed = new MessageEmbed()
-      .setTitle(`${client.user.username} Information`)
+      .setTitle(`Інформація про ${client.user.username}`)
       .setColor(client.config.embedColor)
       .setDescription(
-        `\`\`\`yml\nName: ${client.user.username}#${client.user.discriminator} [${client.user.id}]\nAPI: ${client.ws.ping}ms\nRuntime: ${runtime}\`\`\``
+        `\`\`\`yml\nAPI: ${client.ws.ping} мс\nRuntime: ${runtime}\`\`\``
       )
       .setFields([
         {
-          name: `Lavalink stats`,
+          name: `Статистика Lavalink`,
           value: `\`\`\`yml\nUptime: ${lavauptime}\nRAM: ${lavaram} MB\nPlaying: ${
             client.manager.nodes.values().next().value.stats.playingPlayers
-          } out of ${
+          } з ${
             client.manager.nodes.values().next().value.stats.players
           }\`\`\``,
           inline: true,
         },
         {
-          name: "Bot stats",
+          name: "Статистика бота",
           value: `\`\`\`yml\nGuilds: ${
             client.guilds.cache.size
-          } \nNodeJS: ${nodeVersion}\nDiscordMusicBot: v${
-            require("../../package.json").version
-          } \`\`\``,
+          } \nNodeJS: ${nodeVersion} \`\`\``,
           inline: true,
         },
         {
-          name: "System stats",
+          name: "Статистика системи",
           value: `\`\`\`yml\nOS: ${osver}\nUptime: ${sysuptime}\n\`\`\``,
           inline: false,
         },
       ])
-      .setFooter({ text: `Build: ${gitHash}` });
+      .setFooter({ text: `Білд: ${gitHash}` });
     return interaction.reply({ embeds: [statsEmbed], ephemeral: false });
   });
 

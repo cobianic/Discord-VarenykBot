@@ -72,20 +72,32 @@ module.exports = async (client, interaction) => {
   }
 
   // if theres no previous song, return an error.
-  if (property === "Replay") {
-    if (!player.queue.previous) {
+  if (property === "Previous") {
+    const previousSong = player.queue.previous;
+    const currentSong = player.queue.current;
+    const nextSong = player.queue[0]
+
+    if (!previousSong
+      || previousSong === currentSong
+      || previousSong === nextSong) {
       interaction.reply({
-        embeds: [client.ErrorEmbed("Попередньої пісні для повторення немає")],
+        embeds: [
+          new MessageEmbed()
+            .setColor("RED")
+            .setDescription("Немає попередньої пісні"),
+        ],
       });
       setTimeout(() => {
         interaction.deleteReply();
       }, 5000);
       return;
     }
-    const currentSong = player.queue.current;
-    player.play(player.queue.previous);
-    if (currentSong) player.queue.unshift(currentSong);
-    return;
+
+    if (previousSong !== currentSong && previousSong !== nextSong) {
+      player.queue.splice(0, 0, currentSong)
+      player.play(previousSong);
+      return;
+    }
   }
 
   if (property === "PlayAndPause") {

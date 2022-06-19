@@ -3,7 +3,7 @@ const { MessageEmbed } = require("discord.js");
 
 const command = new SlashCommand()
   .setName("previous")
-  .setDescription("Go back to the previous song.")
+  .setDescription("Вернутись до попередньої пісні")
   .setRun(async (client, interaction) => {
     let channel = await client.getChannel(client, interaction);
     if (!channel) return;
@@ -16,7 +16,7 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setColor("RED")
-            .setDescription("Lavalink node is not connected"),
+            .setDescription("Немає з\'єднання з нодою Lavalink"),
         ],
       });
 
@@ -25,36 +25,41 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setColor("RED")
-            .setDescription("There are no previous songs for this session."),
+            .setDescription("Нічого не грає"),
         ],
         ephemeral: true,
       });
     }
 
-    let previousSong = player.queue.previous;
+    const previousSong = player.queue.previous;
+    const currentSong = player.queue.current;
+    const nextSong = player.queue[0]
 
-    if (!previousSong)
+    if (!previousSong
+      || previousSong === currentSong
+      || previousSong === nextSong) {
       return interaction.reply({
         embeds: [
           new MessageEmbed()
             .setColor("RED")
-            .setDescription("There is no previous song in the queue."),
+            .setDescription("Немає попередньої пісні"),
         ],
-      });
+      })}
 
-    const currentSong = player.queue.current;
-    player.play(previousSong);
+    if (previousSong !== currentSong && previousSong !== nextSong) {
+      player.queue.splice(0, 0, currentSong)
+      player.play(previousSong);
+    }
+
     interaction.reply({
       embeds: [
         new MessageEmbed()
           .setColor(client.config.embedColor)
           .setDescription(
-            `⏮ | Previous song: **${previousSong.title}**`
+            `⏮ | Попередня пісня: **${previousSong.title}**`
           ),
       ],
     });
-
-    previousSong = currentSong;
   });
 
 module.exports = command;

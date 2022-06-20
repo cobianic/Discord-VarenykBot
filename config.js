@@ -13,7 +13,9 @@ module.exports = {
   permissions: 277083450689, //Bot Inviting Permissions
   disconnectTime: 1, //How long should the bot wait before disconnecting from the voice channel. in miliseconds. set to 1 for instant disconnect.
   alwaysplay: true, // when set to true music will always play no matter if theres no one in voice channel.
-  debug: true, //Debug mode
+  debug: false, //Debug mode
+  cookieSecret: "CodingWithSudhan is epic",//Cookie
+  website: "http://localhost:4200",//without the / at the end
   // Lavalink server; optional public lavalink -> https://lavalink-list.darrennathanael.com/
   // The default one should work fine.
   nodes: [

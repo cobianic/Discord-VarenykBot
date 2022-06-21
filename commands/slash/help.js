@@ -27,7 +27,7 @@ const command = new SlashCommand()
     let maxPages = Math.ceil(totalCmds / client.config.cmdPerPage);
 
     // if git exists, then get commit hash
-    let gitHash = "";
+    let gitHash = "unknown";
     try {
       gitHash = require("child_process")
         .execSync("git rev-parse --short HEAD")

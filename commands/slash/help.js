@@ -27,16 +27,17 @@ const command = new SlashCommand()
     let maxPages = Math.ceil(totalCmds / client.config.cmdPerPage);
 
     // if git exists, then get commit hash
-    let gitHash = "unknown";
-    try {
-      gitHash = require("child_process")
-        .execSync("git rev-parse --short HEAD")
-        .toString()
-        .trim();
-    } catch (e) {
-      // do nothing
-      gitHash = "unknown";
-    }
+
+    // let gitHash = "unknown";
+    // try {
+    //   gitHash = require("child_process")
+    //     .execSync("git rev-parse --short HEAD")
+    //     .toString()
+    //     .trim();
+    // } catch (e) {
+    //   // do nothing
+    //   gitHash = "unknown";
+    // }
 
     // default Page No.
     let pageNo = 0;

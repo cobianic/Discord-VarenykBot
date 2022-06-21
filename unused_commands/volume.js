@@ -1,13 +1,13 @@
-const SlashCommand = require("../../lib/SlashCommand");
+const SlashCommand = require("../lib/SlashCommand");
 const { MessageEmbed } = require("discord.js");
 
 const command = new SlashCommand()
   .setName("volume")
-  .setDescription("Change the volume of the current song.")
+  .setDescription("Змінює гучність програвача")
   .addNumberOption((option) =>
     option
-      .setName("amount")
-      .setDescription("Amount of volume you want to change. Ex: 10")
+      .setName("гучність")
+      .setDescription("Гучність, яку ви хочете встановити (1-125)")
       .setRequired(false)
   )
   .setRun(async (client, interaction) => {
@@ -22,7 +22,7 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setColor("RED")
-            .setDescription("Lavalink node is not connected"),
+            .setDescription("Немає з\'єднання з нодою Lavalink"),
         ],
       });
 
@@ -31,20 +31,20 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setColor("RED")
-            .setDescription("There is no music playing."),
+            .setDescription("Нічого не грає"),
         ],
         ephemeral: true,
       });
     }
 
-    let vol = interaction.options.getNumber("amount");
+    let vol = interaction.options.getNumber("гучність");
     if (!vol || vol < 1 || vol > 125) {
       return interaction.reply({
         embeds: [
           new MessageEmbed()
             .setColor(client.config.embedColor)
             .setDescription(
-              `:loud_sound: | Current volume **${player.volume}**`
+              `:loud_sound: | Зараз гучність **${player.volume}**`
             ),
         ],
       });
@@ -56,7 +56,7 @@ const command = new SlashCommand()
         new MessageEmbed()
           .setColor(client.config.embedColor)
           .setDescription(
-            `:loud_sound: | Successfully set volume to **${player.volume}**`
+            `:loud_sound: | Гучність встановлена на **${player.volume}**`
           ),
       ],
     });

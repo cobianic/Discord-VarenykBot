@@ -1,4 +1,4 @@
-const SlashCommand = require("../../lib/SlashCommand");
+const SlashCommand = require("../lib/SlashCommand");
 
 const command = new SlashCommand()
   .setName("summon")

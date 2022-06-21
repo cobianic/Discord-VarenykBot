@@ -1,5 +1,5 @@
 const { MessageActionRow, MessageButton, MessageEmbed } = require("discord.js");
-const SlashCommand = require("../../lib/SlashCommand");
+const SlashCommand = require("../lib/SlashCommand");
 
 const command = new SlashCommand()
   .setName("invite")

@@ -1,4 +1,4 @@
-const SlashCommand = require("../../lib/SlashCommand");
+const SlashCommand = require("../lib/SlashCommand");
 const { MessageEmbed } = require("discord.js");
 const prettyMilliseconds = require("pretty-ms");
 

@@ -5,7 +5,7 @@ module.exports = {
 
   /**
    * This function will handle context menu interaction
-   * @param {import("../lib/DiscordMusicBot")} client
+   * @param {import("../../lib/DiscordMusicBot")} client
    * @param {import("discord.js").GuildContextMenuInteraction} interaction
    */
   run: (client, interaction, options) => {

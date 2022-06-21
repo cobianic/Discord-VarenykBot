@@ -2,8 +2,8 @@ const SlashCommand = require("../../lib/SlashCommand");
 const { MessageEmbed } = require("discord.js");
 
 const command = new SlashCommand()
-  .setName("loopq")
-  .setDescription("Loop the current song queue")
+  .setName("loopqueue")
+  .setDescription("Зациклює чергу відтворення (вкл/викл)")
   .setRun(async (client, interaction, options) => {
     let channel = await client.getChannel(client, interaction);
     if (!channel) return;
@@ -16,7 +16,7 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setColor("RED")
-            .setDescription("Lavalink node is not connected"),
+            .setDescription("Немає з\'єднання з нодою Lavalink"),
         ],
       });
 
@@ -25,21 +25,21 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setColor("RED")
-            .setDescription("There is no music playing."),
+            .setDescription("Нічого не грає"),
         ],
         ephemeral: true,
       });
     }
 
     if (player.setQueueRepeat(!player.queueRepeat));
-    const queueRepeat = player.queueRepeat ? "enabled" : "disabled";
+    const queueRepeat = player.queueRepeat ? "ввімкнене" : "вимкнене";
 
     interaction.reply({
       embeds: [
         new MessageEmbed()
           .setColor(client.config.embedColor)
           .setDescription(
-            `:thumbsup: | **Loop queue is now \`${queueRepeat}\`**`
+            `:thumbsup: | **Зациклювання черги \`${queueRepeat}\`**`
           ),
       ],
     });

@@ -5,7 +5,7 @@ const path = require("path");
 
 const command = new SlashCommand()
   .setName("reload")
-  .setDescription("Перезавантажити команди (команда тільки для 🍆")
+  .setDescription("Перезавантажити команди (команда тільки для 🍆)")
   .setRun(async (client, interaction, options) => {
     if (interaction.user.id === client.config.adminId) {
       try {

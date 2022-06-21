@@ -3,16 +3,16 @@ const { MessageEmbed } = require("discord.js");
 
 const command = new SlashCommand()
   .setName("skipto")
-  .setDescription("skip to a specific song in the queue")
+  .setDescription("Переходить до необхідної пісні в черзі")
   .addNumberOption((option) =>
     option
-      .setName("number")
-      .setDescription("The number of tracks to skipto")
+      .setName("номер")
+      .setDescription("Номер пісні в черзі")
       .setRequired(true)
   )
 
   .setRun(async (client, interaction, options) => {
-    const args = interaction.options.getNumber("number");
+    const args = interaction.options.getNumber("номер");
     //const duration = player.queue.current.duration
 
     let channel = await client.getChannel(client, interaction);
@@ -26,7 +26,7 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setColor("RED")
-            .setDescription("Lavalink node is not connected"),
+            .setDescription("Немає з\'єднання з нодою Lavalink"),
         ],
       });
 
@@ -35,7 +35,7 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setColor("RED")
-            .setDescription("I'm not in a channel."),
+            .setDescription("Нічого не грає"),
         ],
         ephemeral: true,
       });
@@ -48,8 +48,8 @@ const command = new SlashCommand()
     try {
       if (!position || position < 0 || position > player.queue.size) {
         let thing = new MessageEmbed()
-          .setColor(client.config.embedColor)
-          .setDescription("❌ | Invalid position!");
+          .setColor("RED")
+          .setDescription("Невірний номер");
         return interaction.editReply({ embeds: [thing] });
       }
 
@@ -58,7 +58,7 @@ const command = new SlashCommand()
 
       let thing = new MessageEmbed()
         .setColor(client.config.embedColor)
-        .setDescription("✅ | Skipped to position " + position);
+        .setDescription("✅ | Грає пісня номер " + position);
 
       return interaction.editReply({ embeds: [thing] });
     } catch {
@@ -69,7 +69,7 @@ const command = new SlashCommand()
         embeds: [
           new MessageEmbed()
             .setColor(client.config.embedColor)
-            .setDescription("✅ | Skipped to position " + position),
+            .setDescription("✅ | Грає пісня номер " + position),
         ],
       });
     }

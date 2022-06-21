@@ -5,7 +5,7 @@ const path = require("path");
 
 const command = new SlashCommand()
   .setName("reload")
-  .setDescription("Reload all commands")
+  .setDescription("Перезавантажити команди (команда тільки для 🍆")
   .setRun(async (client, interaction, options) => {
     if (interaction.user.id === client.config.adminId) {
       try {
@@ -51,11 +51,11 @@ const command = new SlashCommand()
           embeds: [
             new MessageEmbed()
               .setColor(client.config.embedColor)
-              .setDescription(`Sucessfully Reloaded \`${totalCmds}\` Commands!`)
-              .setFooter({
-                text: `${client.user.username} was reloaded by ${interaction.user.username}`,
-              })
-              .setTimestamp(),
+              .setDescription(`Вдало перезавантажено команд: \`${totalCmds}\`!`)
+              // .setFooter({
+              //   text: `${client.user.username} was reloaded by ${interaction.user.username}`,
+              // })
+              //.setTimestamp(),
           ],
           ephemeral: true,
         });
@@ -64,9 +64,9 @@ const command = new SlashCommand()
         return interaction.reply({
           embeds: [
             new MessageEmbed()
-              .setColor(client.config.embedColor)
+              .setColor("RED")
               .setDescription(
-                "An error has occured. For more details please check console."
+                "Трапилась помилка (╯°□°）╯︵ ┻━┻ Деталі в консолі"
               ),
           ],
           ephemeral: true,
@@ -76,8 +76,8 @@ const command = new SlashCommand()
       return interaction.reply({
         embeds: [
           new MessageEmbed()
-            .setColor(client.config.embedColor)
-            .setDescription("You are not authorized to use this command!"),
+            .setColor("RED")
+            .setDescription("Вам не можна використовувати цю команду (*╯-╰)"),
         ],
         ephemeral: true,
       });

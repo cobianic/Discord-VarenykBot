@@ -10,7 +10,7 @@ module.exports = async (client, interaction) => {
   let player = client.manager.get(guild.id);
 
   if (!player) {
-    interaction.reply({
+    await interaction.reply({
       embeds: [
         client.ErrorEmbed("Нічого не грає, нічим керувати"),
       ],
@@ -40,39 +40,29 @@ module.exports = async (client, interaction) => {
       );
     return interaction.reply({ embeds: [sameEmbed], ephemeral: true });
   }
-  // if (property === "LowVolume") {
-  //   player.setVolume(player.volume - 10);
-  //   interaction.reply({
-  //     embeds: [
-  //       client.Embed(
-  //         "🔉 | **Successfully lowered server volume to** `" +
-  //           player.volume +
-  //           "%`"
-  //       ),
-  //     ],
-  //   });
-  //   setTimeout(() => {
-  //     interaction.deleteReply();
-  //   }, 5000);
-  //   return;
-  // }
 
-  //TODO: зробити так, щоб після виконання цієї команди кнопки видалялись
   if (property === "Stop") {
-    player.destroy();
-    interaction.reply({
+    player.queue.clear();
+    player.stop();
+    client.warn(`Player: ${player.options.guild} | Successfully stopped the player`);
+    const msg = await interaction.channel.send({
       embeds: [
         client.Embed(`Від'єднався!`),
       ],
     });
     setTimeout(() => {
-      interaction.deleteReply();
+      msg.delete();
     }, 5000);
+
+    interaction.update({
+      components: [client.createController(player.options.guild, player)],
+    });
+
     return;
   }
 
   // if theres no previous song, return an error.
-  if (property === "Previous") {
+  if (property === "Replay") {
     const previousSong = player.queue.previous;
     const currentSong = player.queue.current;
     const nextSong = player.queue[0]
@@ -80,7 +70,7 @@ module.exports = async (client, interaction) => {
     if (!previousSong
       || previousSong === currentSong
       || previousSong === nextSong) {
-      interaction.reply({
+      const msg = await interaction.channel.send({
         embeds: [
           new MessageEmbed()
             .setColor("RED")
@@ -88,7 +78,7 @@ module.exports = async (client, interaction) => {
         ],
       });
       setTimeout(() => {
-        interaction.deleteReply();
+        msg.delete();
       }, 5000);
       return;
     }
@@ -101,20 +91,29 @@ module.exports = async (client, interaction) => {
   }
 
   if (property === "PlayAndPause") {
-    if (player.paused) player.pause(false);
-    else player.pause(true);
-    interaction.reply({
-      embeds: [
-        client.Embed(
-          player.paused
-            ? ":white_check_mark: | На паузі"
-            : ":white_check_mark: | Знову грає"
-        ),
-      ],
-    });
-    setTimeout(() => {
-      interaction.deleteReply();
-    }, 5000);
+    if (!player || (!player.playing && player.queue.totalSize === 0)) {
+      const msg = await interaction.channel.send({
+        embeds: [
+          new MessageEmbed()
+            .setColor("RED")
+            .setDescription("Зараз нічого не грає"),
+        ],
+      });
+      setTimeout(() => {
+        msg.delete();
+      }, 5000);
+
+    } else {
+
+      if (player.paused) player.pause(false);
+      else player.pause(true);
+      client.warn(`Player: ${player.options.guild} | Successfully ${player.paused? "paused":"resumed"} the player`);
+
+      interaction.update({
+        components: [client.createController(player.options.guild, player)],
+      });
+    }
+
     return;
   }
 
@@ -123,42 +122,27 @@ module.exports = async (client, interaction) => {
     return interaction.deferUpdate();
   }
 
-  // if (property === "HighVolume") {
-  //   // increase volume by 10% else if volume at 200% do nothing
-  //   if (player.volume < 125) {
-  //     player.setVolume(player.volume + 5);
-  //     interaction.reply({
-  //       embeds: [
-  //         client.Embed(
-  //           "🔊 | **Successfully increased server volume to** `" +
-  //             player.volume +
-  //             "%`"
-  //         ),
-  //       ],
-  //     });
-  //     setTimeout(() => {
-  //       interaction.deleteReply();
-  //     }, 5000);
+  // if (property === "Loop") {
+  //   if (player.trackRepeat) {
+  //     player.setTrackRepeat(false);
+  //     player.setQueueRepeat(true);
+  //   } else if (player.queueRepeat) {
+  //     player.setQueueRepeat(false);
   //   } else {
-  //     interaction.reply({
-  //       embeds: [
-  //         client.Embed(
-  //           "👍 | **Volume is at maximum** `" + player.volume + "%`"
-  //         ),
-  //       ],
-  //     });
-  //     setTimeout(() => {
-  //       interaction.deleteReply();
-  //     }, 5000);
+  //     player.setTrackRepeat(true);
   //   }
+  //   client.warn(`Player: ${player.options.guild} | Successfully toggled loop the player`);
+  //
+  //   interaction.update({
+  //     components: [client.createController(player.options.guild, player)],
+  //   });
   //   return;
   // }
 
+  const controllerEmbed = new MessageEmbed()
+    .setColor("RED")
+    .setDescription("Невідома команда контролера");
   return interaction.reply({
-    embeds: [
-      client.ErrorEmbed("Невідома опція контролера")
-    ],
-    ephemeral: true
-    //content: "❌ | Невідома опція контролера",
+    embeds: [controllerEmbed], ephemeral: true,
   });
 };

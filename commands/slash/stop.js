@@ -9,9 +9,9 @@ const command = new SlashCommand()
     if (!channel) return;
 
     let player;
-    if (client.manager)
+    if (client.manager) {
       player = client.manager.players.get(interaction.guild.id);
-    else
+    } else {
       return interaction.reply({
         embeds: [
           new MessageEmbed()
@@ -19,8 +19,9 @@ const command = new SlashCommand()
             .setDescription("Немає з'єднання з нодою Lavalink"),
         ],
       });
+    }
 
-    if (!player)
+    if (!player) {
       return interaction.reply({
         embeds: [
           new MessageEmbed()
@@ -29,8 +30,14 @@ const command = new SlashCommand()
         ],
         ephemeral: true,
       });
+    }
 
-    player.destroy();
+    if (player.twentyFourSeven) {
+      player.queue.clear();
+      player.stop();
+    } else {
+      player.destroy();
+    }
 
     interaction.reply({
       embeds: [

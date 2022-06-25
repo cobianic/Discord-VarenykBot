@@ -4,10 +4,10 @@ const fs = require("fs");
 const LoadCommands = () => {
   return new Promise(async (resolve) => {
     let slash = await LoadDirectory("slash");
+    let context = []
     //let context = await LoadDirectory("context");
 
-    resolve({ slash });
-    //resolve({ slash, context });
+    resolve({ slash, context });
   });
 };
 

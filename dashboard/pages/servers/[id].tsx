@@ -16,14 +16,14 @@ export default function Server(_props: any) {
             duration: 4000000000,
             currentTime: 3000
         }
-    };
+    }
 
     return (
-            <Content>
-                <Head>
-                    <title>{server.name}</title>
-                </Head>
-                <h1>{server.name}</h1>
-            </Content>
+        <Content>
+            <Head>
+                <title>{ server.name }</title>
+            </Head>
+            <h1>{ server.name }</h1>
+        </Content>
     );
 }

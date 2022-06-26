@@ -32,9 +32,9 @@ class Server extends EventEmitter {
 			.catch((err) => {
 				throw Error(err);
 			});
-
+		
 		this.app = express();
-
+		
 		//API
 		fs.readdir(join(__dirname, "routes"), (err, files) => {
 			if (err) {
@@ -47,16 +47,16 @@ class Server extends EventEmitter {
 				);
 			});
 		});
-
+		
 		this.app.use(express.static(join(__dirname, "..", "public")));
-
+		
 		//Static Routes
-		let dist = join(__dirname, "..", "dashboard", "out");
-
+		let dist = join(__dirname, "..", "dashboard", "out")
+		
 		this.app.use(express.static(dist));
 		this.app.get("/login", (_req, res) => {
 			res.sendFile(join(dist, "login.html"));
-			res.redirect("/api/callback");
+			res.redirect("/api/callback")
 		});
 		this.app.get("/logout", (req, res) => {
 			if (req.user) {
@@ -70,7 +70,7 @@ class Server extends EventEmitter {
 		this.app.get("/servers", Auth, (_req, res) => {
 			res.sendFile(join(dist, "servers.html"));
 		});
-
+		
 		// Session and Passport
 		this.app.use(session({
 			resave: true,
@@ -83,7 +83,7 @@ class Server extends EventEmitter {
 		}));
 		this.app.use(passport.initialize());
 		this.app.use(passport.session());
-
+		
 		passport.use(
 			new DiscordStrategy(
 				{
@@ -99,7 +99,7 @@ class Server extends EventEmitter {
 				},
 			),
 		);
-
+		
 		this.app.get(
 			"/api/callback",
 			passport.authenticate("discord", {
@@ -111,7 +111,7 @@ class Server extends EventEmitter {
 			},
 		);
 	}
-
+	
 	listen() {
 		this.app.listen(this.config.port);
 	}

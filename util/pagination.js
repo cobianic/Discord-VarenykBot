@@ -11,7 +11,7 @@ module.exports = async (
 	if (!pages) {
 		throw new Error("Pages are not given.");
 	}
-
+	
 	let page = 0;
 	const curPage = await msg.channel.send(
 		pages[page].setFooter(

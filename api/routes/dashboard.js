@@ -9,8 +9,8 @@ api.get("/", Auth, (req, res) => {
 		users: client.users.cache.size,
 		servers: client.guilds.cache.size,
 		songsPlayed: client.songsPlayed,
-	};
+	}
 	res.json(data);
-});
+})
 
-module.exports = api;
+module.exports = api

@@ -1,5 +1,4 @@
-import { createTheme, NextUIProvider } from '@nextui-org/react';
-import Navbar from '../components/navbar';
+import { createTheme, NextUIProvider } from "@nextui-org/react";
 
 function MyApp({ Component, pageProps }) {
   return (

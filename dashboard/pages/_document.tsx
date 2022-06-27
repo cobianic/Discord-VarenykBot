@@ -1,6 +1,6 @@
-import React from 'react';
-import Document, { Html, Head, Main, NextScript } from 'next/document';
-import { CssBaseline } from '@nextui-org/react';
+import React from "react";
+import Document, { Head, Html, Main, NextScript } from "next/document";
+import { CssBaseline } from "@nextui-org/react";
 
 class MyDocument extends Document {
   static async getInitialProps(ctx) {
@@ -16,11 +16,12 @@ class MyDocument extends Document {
       <Html lang="en">
         <Head>
           {CssBaseline.flush()}
-          <link rel="shortcut icon" href="https://github.com/SudhanPlayz/Discord-MusicBot/blob/v5/assets/logo.gif" type="image/png" />
+          <link rel="shortcut icon" href="https://github.com/SudhanPlayz/Discord-MusicBot/blob/v5/assets/logo.gif"
+                type="image/png" />
         </Head>
         <body>
-          <Main />
-          <NextScript />
+        <Main />
+        <NextScript />
         </body>
       </Html>
     );

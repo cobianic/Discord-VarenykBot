@@ -7,5 +7,5 @@
  */
 
 module.exports = async (client, message) => {
-  if (!client.isMessageDeleted(message)) client.markMessageAsDeleted(message);
+	if (!client.isMessageDeleted(message)) client.markMessageAsDeleted(message);
 };

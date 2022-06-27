@@ -14,14 +14,14 @@ const command = new SlashCommand()
 
 		await interaction.deferReply();
 		let number = interaction.options.getInteger("number");
-		number = number && number < 100? ++number : 100;
+		number = number && number < 100 ? ++number : 100;
 
 
 		interaction.channel.messages.fetch({
 			limit: number
 		}).then((messages) => {
 			const botMessages = [];
-			messages.filter(m => m.author.id === client.user.id).forEach(msg =>  botMessages.push(msg))
+			messages.filter(m => m.author.id === client.user.id).forEach(msg => botMessages.push(msg));
 
 			botMessages.shift();
 			interaction.channel.bulkDelete(botMessages, true)
@@ -31,19 +31,19 @@ const command = new SlashCommand()
 						!deletedMessages.some(deletedMsg => deletedMsg == msg);
 					});
 					if (messages.size > 0) {
-						client.log(`Deleting [${ messages.size }] messages older than 14 days.`)
+						client.log(`Deleting [${messages.size}] messages older than 14 days.`);
 						for (const msg of messages) {
 							await msg.delete();
 						}
 					}
 
-					await interaction.editReply({ embeds: [client.Embed(`:white_check_mark: | Deleted ${ botMessages.length } bot messages`)] });
+					await interaction.editReply({ embeds: [client.Embed(`:white_check_mark: | Deleted ${botMessages.length} bot messages`)] });
 					setTimeout(() => {
 						interaction.deleteReply();
 					}, 5000);
-				})
+				});
 
 		});
-	})
+	});
 
 module.exports = command;

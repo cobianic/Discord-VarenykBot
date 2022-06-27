@@ -80,13 +80,12 @@ module.exports = async (client, interaction) => {
 			setTimeout(() => {
 				msg.delete();
 			}, 5000);
-			return;
+			return interaction.deferUpdate();
 		}
-		
 		if (previousSong !== currentSong && previousSong !== nextSong) {
 			player.queue.splice(0, 0, currentSong);
 			player.play(previousSong);
-			return;
+			return interaction.deferUpdate();
 		}
 	}
 	
@@ -102,7 +101,7 @@ module.exports = async (client, interaction) => {
 			setTimeout(() => {
 				msg.delete();
 			}, 5000);
-			
+			return interaction.deferUpdate();
 		} else {
 			
 			if (player.paused) {
@@ -112,12 +111,10 @@ module.exports = async (client, interaction) => {
 			}
 			client.warn(`Player: ${ player.options.guild } | Successfully ${ player.paused? "paused" : "resumed" } the player`);
 			
-			interaction.update({
+			return interaction.update({
 				components: [client.createController(player.options.guild, player)],
 			});
 		}
-		
-		return;
 	}
 	
 	if (property === "Next") {

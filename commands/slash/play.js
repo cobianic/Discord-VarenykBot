@@ -4,29 +4,32 @@ const { MessageEmbed } = require("discord.js");
 const command = new SlashCommand()
 	.setName("play")
 	.setDescription(
-		"Шукає і грає пісні з Youtube, Spotify, Deezer, Apple Music"
+		"Шукає і грає пісні з Youtube, Spotify, Deezer, Apple Music",
 	)
 	.addStringOption((option) =>
 		option
 			.setName("запит")
 			.setDescription("Ссилка або назва пісні")
-			.setRequired(true)
+			.setRequired(true),
 	)
 	.setRun(async (client, interaction, options) => {
 		let channel = await client.getChannel(client, interaction);
-		if (!channel) return;
+		if (!channel) {
+			return;
+		}
 
 		let player;
-		if (client.manager)
+		if (client.manager) {
 			player = client.createPlayer(interaction.channel, channel);
-		else
+		} else {
 			return interaction.reply({
 				embeds: [
 					new MessageEmbed()
 						.setColor("RED")
-						.setDescription("Немає з'єднання з нодою Lavalink")
-				]
+						.setDescription("Немає з'єднання з нодою Lavalink"),
+				],
 			});
+		}
 
 		if (player.state !== "CONNECTED") {
 			player.connect();
@@ -48,40 +51,44 @@ const command = new SlashCommand()
 			embeds: [
 				new MessageEmbed()
 					.setColor(client.config.embedColor)
-					.setDescription(":mag_right: **Шукаю...**")
-			]
+					.setDescription(":mag_right: **Шукаю...**"),
+			],
 		});
 
 		let query = options.getString("запит", true);
 		let res = await player.search(query, interaction.user).catch((err) => {
 			client.error(err);
 			return {
-				loadType: "LOAD_FAILED"
+				loadType: "LOAD_FAILED",
 			};
 		});
 
 		if (res.loadType === "LOAD_FAILED") {
-			if (!player.queue.current) player.destroy();
+			if (!player.queue.current) {
+				player.destroy();
+			}
 			return interaction
 				.editReply({
 					embeds: [
 						new MessageEmbed()
 							.setColor("RED")
-							.setDescription("Протягом пошуку відбулась помилка")
-					]
+							.setDescription("Протягом пошуку відбулась помилка"),
+					],
 				})
 				.catch(this.warn);
 		}
 
 		if (res.loadType === "NO_MATCHES") {
-			if (!player.queue.current) player.destroy();
+			if (!player.queue.current) {
+				player.destroy();
+			}
 			return interaction
 				.editReply({
 					embeds: [
 						new MessageEmbed()
 							.setColor("RED")
-							.setDescription("Нічого не знайдено")
-					]
+							.setDescription("Нічого не знайдено"),
+					],
 				})
 				.catch(this.warn);
 		}
@@ -95,18 +102,21 @@ const command = new SlashCommand()
 						psba.push(r.identifier);
 					}
 				}
-				while (psba.length > 100) psba.shift();
+				while (psba.length > 100) {
+					psba.shift();
+				}
 				player.set("autoplayed", psba);
 			}
 			player.queue.add(r);
-			if (!player.playing && !player.paused && !player.queue.size)
+			if (!player.playing && !player.paused && !player.queue.size) {
 				player.play();
+			}
 
 			let addQueueEmbed = new MessageEmbed()
 				.setColor(client.config.embedColor)
 				.setAuthor({ name: "Додано до черги", iconURL: client.config.iconURL })
 				.setDescription(
-					`[${res.tracks[0].title}](${res.tracks[0].uri})` || "Без назви"
+					`[${ res.tracks[0].title }](${ res.tracks[0].uri })` || "Без назви",
 				)
 				.setURL(res.tracks[0].uri)
 				.addField("Автор", res.tracks[0].author, true)
@@ -114,27 +124,27 @@ const command = new SlashCommand()
 					"Тривалість",
 					res.tracks[0].isStream
 						? `\`стрім\``
-						: `\`${client.ms(res.tracks[0].duration, {
-							colonNotation: true
-						})}\``,
-					true
+						: `\`${ client.ms(res.tracks[0].duration, {
+							colonNotation: true,
+						}) }\``,
+					true,
 				);
 
 			try {
 				addQueueEmbed.setThumbnail(
-					res.tracks[0].displayThumbnail("maxresdefault")
+					res.tracks[0].displayThumbnail("maxresdefault"),
 				);
 			} catch (err) {
 				addQueueEmbed.setThumbnail(res.tracks[0].thumbnail);
 			}
 
-			if (player.queue.totalSize > 1)
+			if (player.queue.totalSize > 1) {
 				addQueueEmbed.addField(
 					"Позиція в черзі",
-					`${player.queue.size}`,
-					true
+					`${ player.queue.size }`,
+					true,
 				);
-			else {
+			} else {
 				player.queue.previous = player.queue.current;
 			}
 
@@ -151,7 +161,9 @@ const command = new SlashCommand()
 						psba.push(r.identifier);
 					}
 				}
-				while (psba.length > 100) psba.shift();
+				while (psba.length > 100) {
+					psba.shift();
+				}
 				player.set("autoplayed", psba);
 			}
 			player.queue.add(res.tracks);
@@ -160,22 +172,23 @@ const command = new SlashCommand()
 				!player.playing &&
 				!player.paused &&
 				player.queue.totalSize === res.tracks.length
-			)
+			) {
 				player.play();
+			}
 
 			let playlistEmbed = new MessageEmbed()
 				.setColor(client.config.embedColor)
 				.setAuthor({
 					name: "Плейлист доданий до черги",
-					iconURL: client.config.iconURL
+					iconURL: client.config.iconURL,
 				})
 				.setThumbnail(res.tracks[0].thumbnail)
-				.setDescription(`[${res.playlist.name}](${query})`)
-				.addField("Додано в чергу", `\`${res.tracks.length}\` пісень`, false)
+				.setDescription(`[${ res.playlist.name }](${ query })`)
+				.addField("Додано в чергу", `\`${ res.tracks.length }\` пісень`, false)
 				.addField(
 					"Тривалість плейлиста",
-					`\`${client.ms(res.playlist.duration, { colonNotation: true })}\``,
-					false
+					`\`${ client.ms(res.playlist.duration, { colonNotation: true }) }\``,
+					false,
 				);
 
 			return interaction

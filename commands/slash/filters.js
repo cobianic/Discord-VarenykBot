@@ -20,42 +20,45 @@ const command = new SlashCommand()
 				{ name: "Karaoke", value: "karaoke" },
 				{ name: "Vibrato", value: "vibrato" },
 				{ name: "Tremolo", value: "tremolo" },
-				{ name: "Reset", value: "off" }
-			)
+				{ name: "Reset", value: "off" },
+			),
 	)
-
+	
 	.setRun(async (client, interaction, options) => {
 		const args = interaction.options.getString("пресет");
-
+		
 		let channel = await client.getChannel(client, interaction);
-		if (!channel) return;
-
+		if (!channel) {
+			return;
+		}
+		
 		let player;
-		if (client.manager)
+		if (client.manager) {
 			player = client.manager.players.get(interaction.guild.id);
-		else
+		} else {
 			return interaction.reply({
 				embeds: [
 					new MessageEmbed()
 						.setColor("RED")
-						.setDescription("Немає з'єднання з нодою Lavalink")
-				]
+						.setDescription("Немає з'єднання з нодою Lavalink"),
+				],
 			});
-
+		}
+		
 		if (!player) {
 			return interaction.reply({
 				embeds: [
 					new MessageEmbed()
 						.setColor("RED")
-						.setDescription("Нічого не грає")
+						.setDescription("Нічого не грає"),
 				],
-				ephemeral: true
+				ephemeral: true,
 			});
 		}
-
+		
 		// create a new embed
 		let thing = new MessageEmbed().setColor(client.config.embedColor);
-
+		
 		if (args == "nightcore") {
 			thing.setDescription("✅ | Фільтр Nightcore увімкнений!");
 			player.nightcore = true;
@@ -92,7 +95,7 @@ const command = new SlashCommand()
 		} else {
 			thing.setDescription("❌ | Неправильний фільтр");
 		}
-
+		
 		return interaction.reply({ embeds: [thing] });
 	});
 

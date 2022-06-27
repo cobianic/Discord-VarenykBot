@@ -8,7 +8,7 @@ api.get("/", Auth, (req, res) => {
 		commandsRan: client.commandsRan,
 		users: client.users.cache.size,
 		servers: client.guilds.cache.size,
-		songsPlayed: client.songsPlayed
+		songsPlayed: client.songsPlayed,
 	};
 	res.json(data);
 });

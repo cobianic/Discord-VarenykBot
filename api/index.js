@@ -9,11 +9,11 @@ const getConfig = require("../util/getConfig");
 const DiscordMusicBot = require("../lib/DiscordMusicBot");
 const Auth = require("./middlewares/auth");
 
-passport.serializeUser(function(user, done) {
+passport.serializeUser(function (user, done) {
 	done(null, user);
 });
 
-passport.deserializeUser(function(obj, done) {
+passport.deserializeUser(function (obj, done) {
 	done(null, obj);
 });
 
@@ -37,11 +37,13 @@ class Server extends EventEmitter {
 
 		//API
 		fs.readdir(join(__dirname, "routes"), (err, files) => {
-			if (err) return console.log(err);
+			if (err) {
+				return console.log(err);
+			}
 			files.forEach((file) => {
 				this.app.use(
 					"/api/" + file.split(".")[0],
-					require(join(__dirname, "routes") + "/" + file)
+					require(join(__dirname, "routes") + "/" + file),
 				);
 			});
 		});
@@ -57,7 +59,9 @@ class Server extends EventEmitter {
 			res.redirect("/api/callback");
 		});
 		this.app.get("/logout", (req, res) => {
-			if (req.user) req.logout();
+			if (req.user) {
+				req.logout();
+			}
 			res.sendFile(join(dist, "logout.html"));
 		});
 		this.app.get("/dashboard", Auth, (_req, res) => {
@@ -74,8 +78,8 @@ class Server extends EventEmitter {
 			secret: client.config.cookieSecret,
 			cookie: {
 				secure: client.config.website.startsWith("https://"),
-				sameSite: true
-			}
+				sameSite: true,
+			},
 		}));
 		this.app.use(passport.initialize());
 		this.app.use(passport.session());
@@ -86,25 +90,25 @@ class Server extends EventEmitter {
 					clientID: client.config.clientId,
 					clientSecret: client.config.clientSecret,
 					callbackURL: client.config.website + "/api/callback",
-					scope: client.config.scopes.filter(a => !a.startsWith("app")).join(" ")
+					scope: client.config.scopes.filter(a => !a.startsWith("app")).join(" "),
 				},
-				function(accessToken, refreshToken, profile, done) {
-					process.nextTick(function() {
+				function (accessToken, refreshToken, profile, done) {
+					process.nextTick(function () {
 						return done(null, profile);
 					});
-				}
-			)
+				},
+			),
 		);
 
 		this.app.get(
 			"/api/callback",
 			passport.authenticate("discord", {
 				failureRedirect: "/",
-				session: true
+				session: true,
 			}),
-			function(req, res) {
+			function (req, res) {
 				res.redirect("/dashboard");
-			}
+			},
 		);
 	}
 

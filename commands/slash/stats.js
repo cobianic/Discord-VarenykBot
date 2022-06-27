@@ -10,10 +10,10 @@ const command = new SlashCommand()
 	.setRun(async (client, interaction) => {
 		// get OS info
 		const osver = os.platform() + " " + os.release();
-
+		
 		// Get nodejs version
 		const nodeVersion = process.version;
-
+		
 		// get the uptime in a human readable format
 		const runtime = moment
 			.duration(client.uptime)
@@ -38,7 +38,7 @@ const command = new SlashCommand()
 		var sysuptime = moment
 			.duration(os.uptime() * 1000)
 			.format("d[ дн]・h[ г]・m[ хв]・s[ с]");
-
+		
 		// get commit hash and date
 		let gitHash = "unknown";
 		try {
@@ -50,37 +50,37 @@ const command = new SlashCommand()
 			// do nothing
 			gitHash = "unknown";
 		}
-
+		
 		const statsEmbed = new MessageEmbed()
-			.setTitle(`Інформація про ${client.user.username}`)
+			.setTitle(`Інформація про ${ client.user.username }`)
 			.setColor(client.config.embedColor)
 			.setDescription(
-				`\`\`\`yml\nAPI: ${client.ws.ping} мс\nRuntime: ${runtime}\`\`\``
+				`\`\`\`yml\nAPI: ${ client.ws.ping } мс\nRuntime: ${ runtime }\`\`\``,
 			)
 			.setFields([
 				{
 					name: `Статистика Lavalink`,
-					value: `\`\`\`yml\nUptime: ${lavauptime}\nRAM: ${lavaram} MB\nPlaying: ${
+					value: `\`\`\`yml\nUptime: ${ lavauptime }\nRAM: ${ lavaram } MB\nPlaying: ${
 						client.manager.nodes.values().next().value.stats.playingPlayers
 					} з ${
 						client.manager.nodes.values().next().value.stats.players
 					}\`\`\``,
-					inline: true
+					inline: true,
 				},
 				{
 					name: "Статистика бота",
 					value: `\`\`\`yml\nGuilds: ${
 						client.guilds.cache.size
-					} \nNodeJS: ${nodeVersion} \`\`\``,
-					inline: true
+					} \nNodeJS: ${ nodeVersion } \`\`\``,
+					inline: true,
 				},
 				{
 					name: "Статистика системи",
-					value: `\`\`\`yml\nOS: ${osver}\nUptime: ${sysuptime}\n\`\`\``,
-					inline: false
-				}
+					value: `\`\`\`yml\nOS: ${ osver }\nUptime: ${ sysuptime }\n\`\`\``,
+					inline: false,
+				},
 			])
-			.setFooter({ text: `Білд: ${gitHash}` });
+			.setFooter({ text: `Білд: ${ gitHash }` });
 		return interaction.reply({ embeds: [statsEmbed], ephemeral: false });
 	});
 

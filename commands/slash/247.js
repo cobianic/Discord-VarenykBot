@@ -7,59 +7,64 @@ const command = new SlashCommand()
 	.setDescription("Не дозволяє боту відключатись від голосового каналу (вкл/викл)")
 	.setRun(async (client, interaction, options) => {
 		let channel = await client.getChannel(client, interaction);
-		if (!channel) return;
-
+		if (!channel) {
+			return;
+		}
+		
 		let player;
-		if (client.manager)
+		if (client.manager) {
 			player = client.manager.players.get(interaction.guild.id);
-		else
+		} else {
 			return interaction.reply({
 				embeds: [
 					new MessageEmbed()
 						.setColor("RED")
-						.setDescription("Немає з\'єднання з нодою Lavalink")
-				]
+						.setDescription("Немає з\'єднання з нодою Lavalink"),
+				],
 			});
-
+		}
+		
 		if (!player) {
 			return interaction.reply({
 				embeds: [
 					new MessageEmbed()
 						.setColor("RED")
-						.setDescription("Немає що грати 24/7")
+						.setDescription("Немає що грати 24/7"),
 				],
-				ephemeral: true
+				ephemeral: true,
 			});
 		}
-
+		
 		let twentyFourSevenEmbed = new MessageEmbed().setColor(
-			client.config.embedColor
+			client.config.embedColor,
 		);
 		const twentyFourSeven = player.get("twentyFourSeven");
-
+		
 		if (!twentyFourSeven || twentyFourSeven === false) {
 			player.set("twentyFourSeven", true);
 		} else {
 			player.set("twentyFourSeven", false);
 		}
-
+		
 		twentyFourSevenEmbed.setDescription(
-			`✅ | **Режим 24/7 \`${!twentyFourSeven ? "увімкнений" : "вимкнений"}\`**`
+			`✅ | **Режим 24/7 \`${ !twentyFourSeven? "увімкнений" : "вимкнений" }\`**`,
 		);
 		client.warn(
-			`Player: ${player.options.guild} | [${colors.blue(
-				"24/7"
-			)}] has been [${colors.blue(
-				!twentyFourSeven ? "ENABLED" : "DISABLED"
-			)}] in ${
+			`Player: ${ player.options.guild } | [${ colors.blue(
+				"24/7",
+			) }] has been [${ colors.blue(
+				!twentyFourSeven? "ENABLED" : "DISABLED",
+			) }] in ${
 				client.guilds.cache.get(player.options.guild)
 					? client.guilds.cache.get(player.options.guild).name
 					: "a guild"
-			}`
+			}`,
 		);
-
-		if (!player.playing && player.queue.totalSize === 0 && twentyFourSeven) player.destroy();
-
+		
+		if (!player.playing && player.queue.totalSize === 0 && twentyFourSeven) {
+			player.destroy();
+		}
+		
 		return interaction.reply({ embeds: [twentyFourSevenEmbed] });
 	});
 

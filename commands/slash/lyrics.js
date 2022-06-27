@@ -10,43 +10,45 @@ const command = new SlashCommand()
 		option
 			.setName("пісня")
 			.setDescription("Пісня, для якої потрібен текст")
-			.setRequired(false)
+			.setRequired(false),
 	)
 	.setRun(async (client, interaction, options) => {
 		await interaction.reply({
 			embeds: [
 				new MessageEmbed()
 					.setColor(client.config.embedColor)
-					.setDescription("🔎 **Шукаю...**")
-			]
+					.setDescription("🔎 **Шукаю...**"),
+			],
 		});
-
+		
 		let player;
-		if (client.manager)
+		if (client.manager) {
 			player = client.manager.players.get(interaction.guild.id);
-		else
+		} else {
 			return interaction.reply({
 				embeds: [
 					new MessageEmbed()
 						.setColor("RED")
-						.setDescription("Немає з'єднання з нодою Lavalink")
-				]
+						.setDescription("Немає з'єднання з нодою Lavalink"),
+				],
 			});
-
+		}
+		
 		const args = interaction.options.getString("пісня");
-		if (!args && !player)
+		if (!args && !player) {
 			return interaction.editReply({
 				embeds: [
 					new MessageEmbed()
 						.setColor("RED")
-						.setDescription("Нічого не грає")
-				]
+						.setDescription("Нічого не грає"),
+				],
 			});
-
-		let search = args ? args : player.queue.current.title;
+		}
+		
+		let search = args? args : player.queue.current.title;
 		// Lavalink api for lyrics
-		let url = `https://api.darrennathanael.com/lyrics?song=${search}`;
-
+		let url = `https://api.darrennathanael.com/lyrics?song=${ search }`;
+		
 		let lyrics = await fetch(url)
 			.then((res) => {
 				return res.json();
@@ -60,27 +62,27 @@ const command = new SlashCommand()
 					new MessageEmbed()
 						.setColor("RED")
 						.setDescription(
-							`❌ | Текст для ${search} не знайдений!\nПереконайтесь, що ви ввели правильні дані.`
-						)
-				]
+							`❌ | Текст для ${ search } не знайдений!\nПереконайтесь, що ви ввели правильні дані.`,
+						),
+				],
 			});
 		}
-
+		
 		let text = lyrics.lyrics;
 		let lyricsEmbed = new MessageEmbed()
 			.setColor(client.config.embedColor)
-			.setTitle(`${lyrics.full_title}`)
+			.setTitle(`${ lyrics.full_title }`)
 			.setURL(lyrics.url)
 			.setThumbnail(lyrics.thumbnail)
 			.setDescription(text);
-
+		
 		if (text.length > 4096) {
 			text = text.substring(0, 4090) + "[...]";
 			lyricsEmbed
 				.setDescription(text)
 				.setFooter({ text: "Текст обрізаний, бо він занадто довгий" });
 		}
-
+		
 		return interaction.editReply({ embeds: [lyricsEmbed] });
 	});
 

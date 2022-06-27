@@ -26,8 +26,8 @@ module.exports = {
 			password: "www.freelavalink.ga",
 			retryAmount: 200, //- The amount of times to retry connecting to the node if connection got dropped.
 			retryDelay: 40, //- Delay between reconnect attempts if connection is lost.
-			secure: false //- Can be either true or false. Only use true if ssl is enabled!
-		}
+			secure: false, //- Can be either true or false. Only use true if ssl is enabled!
+		},
 	],
 	embedColor: "#9c59b6", //Color of the embeds, hex supported
 	presence: {
@@ -36,10 +36,10 @@ module.exports = {
 		activities: [
 			{
 				name: "/play", //Status Text
-				type: "LISTENING" // PLAYING, WATCHING, LISTENING, STREAMING
-			}
-		]
+				type: "LISTENING", // PLAYING, WATCHING, LISTENING, STREAMING
+			},
+		],
 	},
-	iconURL: ""
+	iconURL: "",
 	//iconURL: "https://cdn.darrennathanael.com/icons/spinning_disk.gif", //This icon will be in every embed's author field
 };

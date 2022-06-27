@@ -11,12 +11,12 @@ api.get("/", (req, res) => {
 		commands: client.slashCommands.map(cmd => {
 			return {
 				name: cmd.name,
-				description: cmd.description
+				description: cmd.description,
 			};
 		}),
-		inviteURL: `https://discord.com/oauth2/authorize?client_id=${client.config.clientId
-		}&permissions=${client.config.permissions
-		}&scope=${client.config.scopes.toString().replace(/,/g, "%20")}`
+		inviteURL: `https://discord.com/oauth2/authorize?client_id=${ client.config.clientId
+		}&permissions=${ client.config.permissions
+		}&scope=${ client.config.scopes.toString().replace(/,/g, "%20") }`,
 	};
 	res.json(data);
 });

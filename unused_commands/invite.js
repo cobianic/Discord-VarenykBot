@@ -9,7 +9,7 @@ const command = new SlashCommand()
 			embeds: [
 				new MessageEmbed()
 					.setColor(client.config.embedColor)
-					.setTitle(`Invite me to your server!`)
+					.setTitle(`Invite me to your server!`),
 			],
 			components: [
 				new MessageActionRow().addComponents(
@@ -21,10 +21,10 @@ const command = new SlashCommand()
 								client.config.clientId
 							}&permissions=${
 								client.config.permissions
-							}&scope=${client.config.scopes.toString().replace(/,/g, "%20")}`
-						)
-				)
-			]
+							}&scope=${ client.config.scopes.toString().replace(/,/g, "%20") }`,
+						),
+				),
+			],
 		});
 	});
 module.exports = command;

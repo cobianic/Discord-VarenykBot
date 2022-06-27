@@ -7,71 +7,74 @@ const command = new SlashCommand()
 	.setDescription("Saves current song to your DM's")
 	.setRun(async (client, interaction) => {
 		let channel = await client.getChannel(client, interaction);
-		if (!channel) return;
-
+		if (!channel) {
+			return;
+		}
+		
 		let player;
-		if (client.manager)
+		if (client.manager) {
 			player = client.manager.players.get(interaction.guild.id);
-		else
+		} else {
 			return interaction.reply({
 				embeds: [
 					new MessageEmbed()
 						.setColor("RED")
-						.setDescription("Lavalink node is not connected")
-				]
+						.setDescription("Lavalink node is not connected"),
+				],
 			});
-
+		}
+		
 		if (!player) {
 			return interaction.reply({
 				embeds: [
 					new MessageEmbed()
 						.setColor("RED")
-						.setDescription("There is no music playing right now.")
+						.setDescription("There is no music playing right now."),
 				],
-				ephemeral: true
+				ephemeral: true,
 			});
 		}
-
+		
 		const save = new MessageEmbed()
 			.setColor(client.config.embedColor)
 			.setAuthor({
 				name: "Saved track",
-				iconURL: `${interaction.user.displayAvatarURL({ dynamic: true })}`
+				iconURL: `${ interaction.user.displayAvatarURL({ dynamic: true }) }`,
 			})
 			.setDescription(
-				`**Saved [${player.queue.current.title}](${player.queue.current.uri}) to your DM**`
+				`**Saved [${ player.queue.current.title }](${ player.queue.current.uri }) to your DM**`,
 			)
 			.addFields(
 				{
 					name: "Track Duration",
-					value: `\`${prettyMilliseconds(player.queue.current.duration, {
-						colonNotation: true
-					})}\``,
-					inline: true
+					value: `\`${ prettyMilliseconds(player.queue.current.duration, {
+						colonNotation: true,
+					}) }\``,
+					inline: true,
 				},
 				{
 					name: "Track Author",
-					value: `\`${player.queue.current.author}\``,
-					inline: true
+					value: `\`${ player.queue.current.author }\``,
+					inline: true,
 				},
 				{
 					name: "Requested Guild",
-					value: `\`${interaction.guild}\``,
-					inline: true
-				}
+					value: `\`${ interaction.guild }\``,
+					inline: true,
+				},
 			);
-
+		
 		interaction.user.send({ embeds: [save] });
-
+		
 		return interaction.reply({
 			embeds: [
 				new MessageEmbed()
 					.setColor(client.config.embedColor)
 					.setDescription(
-						"Please check your **DMs**. If you didn't receive any message from me please make sure your **DMs** are open"
-					)
+						"Please check your **DMs**. If you didn't receive any message from me please make sure your **DMs** are open",
+					),
 			],
-			ephemeral: true
+			ephemeral: true,
 		});
 	});
 

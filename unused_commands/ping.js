@@ -9,21 +9,21 @@ const command = new SlashCommand()
 			embeds: [
 				new MessageEmbed()
 					.setDescription("🏓 | Fetching ping...")
-					.setColor("#6F8FAF")
-			]
+					.setColor("#6F8FAF"),
+			],
 		});
-
+		
 		let zap = "⚡";
 		let green = "🟢";
 		let red = "🔴";
 		let yellow = "🟡";
-
+		
 		var botState = zap;
 		var apiState = zap;
-
+		
 		let apiPing = client.ws.ping;
 		let botPing = Math.floor(msg.createdAt - interaction.createdAt);
-
+		
 		if (apiPing >= 40 && apiPing < 200) {
 			apiState = green;
 		} else if (apiPing >= 200 && apiPing < 400) {
@@ -31,7 +31,7 @@ const command = new SlashCommand()
 		} else if (apiPing >= 400) {
 			apiState = red;
 		}
-
+		
 		if (botPing >= 40 && botPing < 200) {
 			botState = green;
 		} else if (botPing >= 200 && botPing < 400) {
@@ -39,7 +39,7 @@ const command = new SlashCommand()
 		} else if (botPing >= 400) {
 			botState = red;
 		}
-
+		
 		msg.delete();
 		interaction.reply({
 			embeds: [
@@ -47,20 +47,20 @@ const command = new SlashCommand()
 					.setTitle("🏓 | Pong!")
 					.addField(
 						"API Latency",
-						`\`\`\`yml\n${apiState} | ${apiPing}ms\`\`\``,
-						true
+						`\`\`\`yml\n${ apiState } | ${ apiPing }ms\`\`\``,
+						true,
 					)
 					.addField(
 						"Bot Latency",
-						`\`\`\`yml\n${botState} | ${botPing}ms\`\`\``,
-						true
+						`\`\`\`yml\n${ botState } | ${ botPing }ms\`\`\``,
+						true,
 					)
 					.setColor(client.config.embedColor)
 					.setFooter({
-						text: `Requested by ${interaction.user.tag}`,
-						iconURL: interaction.user.avatarURL()
-					})
-			]
+						text: `Requested by ${ interaction.user.tag }`,
+						iconURL: interaction.user.avatarURL(),
+					}),
+			],
 		});
 	});
 

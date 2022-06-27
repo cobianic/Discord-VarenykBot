@@ -6,8 +6,10 @@ const command = new SlashCommand()
 	.setDescription("Зупиняє музику і очищає чергу")
 	.setRun(async (client, interaction, options) => {
 		let channel = await client.getChannel(client, interaction);
-		if (!channel) return;
-
+		if (!channel) {
+			return;
+		}
+		
 		let player;
 		if (client.manager) {
 			player = client.manager.players.get(interaction.guild.id);
@@ -16,35 +18,35 @@ const command = new SlashCommand()
 				embeds: [
 					new MessageEmbed()
 						.setColor("RED")
-						.setDescription("Немає з'єднання з нодою Lavalink")
-				]
+						.setDescription("Немає з'єднання з нодою Lavalink"),
+				],
 			});
 		}
-
+		
 		if (!player) {
 			return interaction.reply({
 				embeds: [
 					new MessageEmbed()
 						.setColor("RED")
-						.setDescription("Я нічого не граю")
+						.setDescription("Я нічого не граю"),
 				],
-				ephemeral: true
+				ephemeral: true,
 			});
 		}
-
+		
 		if (player.twentyFourSeven) {
 			player.queue.clear();
 			player.stop();
 		} else {
 			player.destroy();
 		}
-
+		
 		interaction.reply({
 			embeds: [
 				new MessageEmbed()
 					.setColor(client.config.embedColor)
-					.setDescription(`Від'єднався!`)
-			]
+					.setDescription(`Від'єднався!`),
+			],
 		});
 	});
 

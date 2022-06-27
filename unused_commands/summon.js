@@ -10,26 +10,26 @@ const command = new SlashCommand()
 			const joinEmbed = new MessageEmbed()
 				.setColor(client.config.embedColor)
 				.setDescription(
-					"❌ | **You must be in a voice channel to use this command.**"
+					"❌ | **You must be in a voice channel to use this command.**",
 				);
 			return interaction.reply({ embeds: [joinEmbed], ephemeral: true });
 		}
-
+		
 		let player = client.manager.players.get(interaction.guild.id);
 		if (!player) {
 			player = client.createPlayer(interaction.channel, channel);
 			player.connect(true);
 		}
-
+		
 		if (channel.id !== player.voiceChannel) {
 			player.setVoiceChannel(channel.id);
 			player.connect();
 		}
-
+		
 		interaction.reply({
 			embeds: [
-				client.Embed(`:thumbsup: | **Successfully joined <#${channel.id}>!**`)
-			]
+				client.Embed(`:thumbsup: | **Successfully joined <#${ channel.id }>!**`),
+			],
 		});
 	});
 

@@ -4,7 +4,7 @@ const {
 	Interaction,
 	MessageActionRow,
 	MessageButton,
-	MessageEmbed
+	MessageEmbed,
 } = require("discord.js");
 const LoadCommands = require("../../util/loadCommands");
 const { filter } = require("lodash");
@@ -21,7 +21,7 @@ const command = new SlashCommand()
 		});
 		// from commands remove the ones that have "null" in the description
 		const filteredCommands = commands.filter(
-			(cmd) => cmd.description != "null"
+			(cmd) => cmd.description != "null",
 		);
 		//console.log(filteredCommands);
 		const totalCmds = filteredCommands.length;
@@ -46,16 +46,16 @@ const command = new SlashCommand()
 		const helpEmbed = new MessageEmbed()
 			.setColor(client.config.embedColor)
 			.setAuthor({
-				name: `Команди, яким навчився ${client.user.username}`,
-				iconURL: client.config.iconURL
+				name: `Команди, яким навчився ${ client.user.username }`,
+				iconURL: client.config.iconURL,
 			})
 			//.setTimestamp()
-			.setFooter({ text: `Сторінка ${pageNo + 1} / ${maxPages}` });
+			.setFooter({ text: `Сторінка ${ pageNo + 1 } / ${ maxPages }` });
 
 		// initial temporary array
 		var tempArray = filteredCommands.slice(
 			pageNo * client.config.cmdPerPage,
-			pageNo * client.config.cmdPerPage + client.config.cmdPerPage
+			pageNo * client.config.cmdPerPage + client.config.cmdPerPage,
 		);
 
 		tempArray.forEach((cmd) => {
@@ -82,18 +82,18 @@ const command = new SlashCommand()
 					.setCustomId("help_cmd_but_1_app")
 					.setEmoji("▶️")
 					.setStyle("PRIMARY")
-					.setDisabled(pageNo == maxPages - 1)
+					.setDisabled(pageNo == maxPages - 1),
 			);
 		};
 
 		const tempMsg = await interaction.editReply({
 			embeds: [helpEmbed],
 			components: [getButtons(pageNo)],
-			fetchReply: true
+			fetchReply: true,
 		});
 		const collector = tempMsg.createMessageComponentCollector({
 			time: 600000,
-			componentType: "BUTTON"
+			componentType: "BUTTON",
 		});
 
 		collector.on("collect", async (iter) => {
@@ -107,14 +107,14 @@ const command = new SlashCommand()
 
 			var tempArray = filteredCommands.slice(
 				pageNo * client.config.cmdPerPage,
-				pageNo * client.config.cmdPerPage + client.config.cmdPerPage
+				pageNo * client.config.cmdPerPage + client.config.cmdPerPage,
 			);
 
 			tempArray.forEach((cmd) => {
 				//console.log(cmd);
 				helpEmbed
 					.addField(cmd.name, cmd.description)
-					.setFooter({ text: `Сторінка ${pageNo + 1} / ${maxPages}` });
+					.setFooter({ text: `Сторінка ${ pageNo + 1 } / ${ maxPages }` });
 			});
 			// helpEmbed.addField(
 			//   "Credits",
@@ -127,7 +127,7 @@ const command = new SlashCommand()
 			await iter.update({
 				embeds: [helpEmbed],
 				components: [getButtons(pageNo)],
-				fetchReply: true
+				fetchReply: true,
 			});
 		});
 	});

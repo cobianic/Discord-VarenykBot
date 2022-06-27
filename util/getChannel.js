@@ -10,9 +10,9 @@ module.exports = async (client, interaction) => {
 			await interaction.reply({
 				embeds: [
 					client.ErrorEmbed(
-						"Хазяїн, ви не в голосовому каналі"
-					)
-				]
+						"Хазяїн, ви не в голосовому каналі",
+					),
+				],
 			});
 			return resolve(false);
 		}
@@ -24,9 +24,9 @@ module.exports = async (client, interaction) => {
 			await interaction.reply({
 				embeds: [
 					client.ErrorEmbed(
-						"Хазяїн, ви не в моєму голосовому каналі"
-					)
-				]
+						"Хазяїн, ви не в моєму голосовому каналі",
+					),
+				],
 			});
 			return resolve(false);
 		}
@@ -34,13 +34,13 @@ module.exports = async (client, interaction) => {
 			await interaction.reply({
 				embeds: [
 					client.ErrorEmbed(
-						"В мене недостатньо дозволів, щоб я міг приєднатись до голосового каналу (つ﹏<)･ﾟ｡"
-					)
-				]
+						"В мене недостатньо дозволів, щоб я міг приєднатись до голосового каналу (つ﹏<)･ﾟ｡",
+					),
+				],
 			});
 			return resolve(false);
 		}
-
+		
 		resolve(interaction.member.voice.channel);
 	});
 };

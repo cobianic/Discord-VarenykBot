@@ -8,42 +8,45 @@ const command = new SlashCommand()
 	.setDescription("Показує пісню, що грає зараз")
 	.setRun(async (client, interaction, options) => {
 		let channel = await client.getChannel(client, interaction);
-		if (!channel) return;
-
+		if (!channel) {
+			return;
+		}
+		
 		let player;
-		if (client.manager)
+		if (client.manager) {
 			player = client.manager.players.get(interaction.guild.id);
-		else
+		} else {
 			return interaction.reply({
 				embeds: [
 					new MessageEmbed()
 						.setColor("RED")
-						.setDescription("Немає з'єднання з нодою Lavalink")
-				]
+						.setDescription("Немає з'єднання з нодою Lavalink"),
+				],
 			});
-
+		}
+		
 		if (!player) {
 			return interaction.reply({
 				embeds: [
 					new MessageEmbed()
 						.setColor("RED")
-						.setDescription("Бот не в голосовому каналі")
+						.setDescription("Бот не в голосовому каналі"),
 				],
-				ephemeral: true
+				ephemeral: true,
 			});
 		}
-
+		
 		if (!player.playing) {
 			return interaction.reply({
 				embeds: [
 					new MessageEmbed()
 						.setColor("RED")
-						.setDescription("Нічого не грає")
+						.setDescription("Нічого не грає"),
 				],
-				ephemeral: true
+				ephemeral: true,
 			});
 		}
-
+		
 		const song = player.queue.current;
 		const embed = new MessageEmbed()
 			.setColor(client.config.embedColor)
@@ -53,24 +56,24 @@ const command = new SlashCommand()
 				{
 					name: "Автор",
 					value: song.author,
-					inline: true
+					inline: true,
 				},
 				// show duration, if live show live
 				{
 					name: "Тривалість",
 					value: song.isStream
 						? `\`стрім\``
-						: `\`${pms(player.position, { colonNotation: true })} / ${pms(
+						: `\`${ pms(player.position, { colonNotation: true }) } / ${ pms(
 							player.queue.current.duration,
-							{ colonNotation: true }
-						)}\``,
-					inline: true
-				}
+							{ colonNotation: true },
+						) }\``,
+					inline: true,
+				},
 			])
 			// show the thumbnail of the song using displayThumbnail("maxresdefault")
 			.setThumbnail(song.displayThumbnail("maxresdefault"))
 			// show the title of the song and link to it
-			.setDescription(`[${song.title}](${song.uri})`);
+			.setDescription(`[${ song.title }](${ song.uri })`);
 		return interaction.reply({ embeds: [embed] });
 	});
 module.exports = command;

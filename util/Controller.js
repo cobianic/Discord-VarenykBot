@@ -8,12 +8,12 @@ module.exports = async (client, interaction) => {
 	let guild = client.guilds.cache.get(interaction.customId.split(":")[1]);
 	let property = interaction.customId.split(":")[2];
 	let player = client.manager.get(guild.id);
-
+	
 	if (!player) {
 		await interaction.reply({
 			embeds: [
-				client.ErrorEmbed("Нічого не грає, нічим керувати")
-			]
+				client.ErrorEmbed("Нічого не грає, нічим керувати"),
+			],
 		});
 		setTimeout(() => {
 			interaction.deleteReply();
@@ -24,11 +24,11 @@ module.exports = async (client, interaction) => {
 		const joinEmbed = new MessageEmbed()
 			.setColor("RED")
 			.setDescription(
-				"❌ | Хазяїн, ви не в голосовому каналі"
+				"❌ | Хазяїн, ви не в голосовому каналі",
 			);
 		return interaction.reply({ embeds: [joinEmbed], ephemeral: true });
 	}
-
+	
 	if (
 		interaction.guild.me.voice.channel &&
 		!interaction.guild.me.voice.channel.equals(interaction.member.voice.channel)
@@ -36,37 +36,37 @@ module.exports = async (client, interaction) => {
 		const sameEmbed = new MessageEmbed()
 			.setColor("RED")
 			.setDescription(
-				"❌ | Хазяїн, ви не в моєму голосовому каналі"
+				"❌ | Хазяїн, ви не в моєму голосовому каналі",
 			);
 		return interaction.reply({ embeds: [sameEmbed], ephemeral: true });
 	}
-
+	
 	if (property === "Stop") {
 		player.queue.clear();
 		player.stop();
-		client.warn(`Player: ${player.options.guild} | Successfully stopped the player`);
+		client.warn(`Player: ${ player.options.guild } | Successfully stopped the player`);
 		const msg = await interaction.channel.send({
 			embeds: [
-				client.Embed(`Від'єднався!`)
-			]
+				client.Embed(`Від'єднався!`),
+			],
 		});
 		setTimeout(() => {
 			msg.delete();
 		}, 5000);
-
+		
 		interaction.update({
-			components: [client.createController(player.options.guild, player)]
+			components: [client.createController(player.options.guild, player)],
 		});
-
+		
 		return;
 	}
-
+	
 	// if theres no previous song, return an error.
 	if (property === "Replay") {
 		const previousSong = player.queue.previous;
 		const currentSong = player.queue.current;
 		const nextSong = player.queue[0];
-
+		
 		if (!previousSong
 			|| previousSong === currentSong
 			|| previousSong === nextSong) {
@@ -74,54 +74,57 @@ module.exports = async (client, interaction) => {
 				embeds: [
 					new MessageEmbed()
 						.setColor("RED")
-						.setDescription("Немає попередньої пісні")
-				]
+						.setDescription("Немає попередньої пісні"),
+				],
 			});
 			setTimeout(() => {
 				msg.delete();
 			}, 5000);
 			return;
 		}
-
+		
 		if (previousSong !== currentSong && previousSong !== nextSong) {
 			player.queue.splice(0, 0, currentSong);
 			player.play(previousSong);
 			return;
 		}
 	}
-
+	
 	if (property === "PlayAndPause") {
 		if (!player || (!player.playing && player.queue.totalSize === 0)) {
 			const msg = await interaction.channel.send({
 				embeds: [
 					new MessageEmbed()
 						.setColor("RED")
-						.setDescription("Зараз нічого не грає")
-				]
+						.setDescription("Зараз нічого не грає"),
+				],
 			});
 			setTimeout(() => {
 				msg.delete();
 			}, 5000);
-
+			
 		} else {
-
-			if (player.paused) player.pause(false);
-			else player.pause(true);
-			client.warn(`Player: ${player.options.guild} | Successfully ${player.paused ? "paused" : "resumed"} the player`);
-
+			
+			if (player.paused) {
+				player.pause(false);
+			} else {
+				player.pause(true);
+			}
+			client.warn(`Player: ${ player.options.guild } | Successfully ${ player.paused? "paused" : "resumed" } the player`);
+			
 			interaction.update({
-				components: [client.createController(player.options.guild, player)]
+				components: [client.createController(player.options.guild, player)],
 			});
 		}
-
+		
 		return;
 	}
-
+	
 	if (property === "Next") {
 		player.stop();
 		return interaction.deferUpdate();
 	}
-
+	
 	// if (property === "Loop") {
 	//   if (player.trackRepeat) {
 	//     player.setTrackRepeat(false);
@@ -138,7 +141,7 @@ module.exports = async (client, interaction) => {
 	//   });
 	//   return;
 	// }
-
+	
 	const controllerEmbed = new MessageEmbed()
 		.setColor("RED")
 		.setDescription("Невідома команда контролера");

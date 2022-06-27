@@ -6,39 +6,42 @@ const command = new SlashCommand()
 	.setDescription("Знімає з паузи")
 	.setRun(async (client, interaction, options) => {
 		let channel = await client.getChannel(client, interaction);
-		if (!channel) return;
-
+		if (!channel) {
+			return;
+		}
+		
 		let player;
-		if (client.manager)
+		if (client.manager) {
 			player = client.manager.players.get(interaction.guild.id);
-		else
+		} else {
 			return interaction.reply({
 				embeds: [
 					new MessageEmbed()
 						.setColor("RED")
-						.setDescription("Немає з\'єднання з нодою Lavalink")
-				]
+						.setDescription("Немає з\'єднання з нодою Lavalink"),
+				],
 			});
-
+		}
+		
 		if (!player) {
 			return interaction.reply({
 				embeds: [
 					new MessageEmbed()
 						.setColor("RED")
-						.setDescription("Зараз нічого не грає")
+						.setDescription("Зараз нічого не грає"),
 				],
-				ephemeral: true
+				ephemeral: true,
 			});
 		}
-
+		
 		if (!player.paused) {
 			return interaction.reply({
 				embeds: [
 					new MessageEmbed()
 						.setColor("RED")
-						.setDescription("Музика вже грає")
+						.setDescription("Музика вже грає"),
 				],
-				ephemeral: true
+				ephemeral: true,
 			});
 		}
 		player.pause(false);
@@ -46,8 +49,8 @@ const command = new SlashCommand()
 			embeds: [
 				new MessageEmbed()
 					.setColor(client.config.embedColor)
-					.setDescription(`⏯ **Знову грає!**`)
-			]
+					.setDescription(`⏯ **Знову грає!**`),
+			],
 		});
 	});
 

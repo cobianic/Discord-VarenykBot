@@ -8,16 +8,16 @@ const command = new SlashCommand()
 		option
 			.setName("варіанти")
 			.setDescription("Строка з варіантами")
-			.setRequired(true)
+			.setRequired(true),
 	)
 	.setRun(async (client, interaction, options) => {
 		let tempArray = options.getString("варіанти").trim()
 			.replace(/([,;])/g, " ").split(/\s+/g);
-
+		
 		const embed = new MessageEmbed()
 			.setColor(client.config.embedColor)
-			.setDescription(`Бог рандому вибрав **${tempArray[Math.floor(Math.random() * tempArray.length)]}** !`);
-
+			.setDescription(`Бог рандому вибрав **${ tempArray[Math.floor(Math.random() * tempArray.length)] }** !`);
+		
 		return interaction.reply({ embeds: [embed] });
 	});
 

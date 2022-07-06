@@ -15,9 +15,10 @@ module.exports = {
 	twentyFourSeven: false, //- When set to true, the bot will never disconnect from the voice channel
 	autoQueue: false, //- When set to true, related songs will automatically be added to the queue
 	alwaysplay: true, //- When set to true music will always play no matter if theres no one in voice channel.
+	autoPause: true, //- When set to true, music will automatically be paused if everyone leaves the voice channel
 	debug: false, //- Debug mode
-	cookieSecret: "CodingWithSudhan is epic", //- Cookie
-	website: "http://localhost:4200",//without the / at the end
+	cookieSecret: "CodingWithSudhan is epic", //- Cookie Secret
+	website: "http://localhost:4200", //- without the / at the end
 	// You need a lavalink server for this bot to work!!!!
 	// Lavalink server; public lavalink -> https://lavalink-list.darrennathanael.com/; create one yourself -> https://darrennathanael.com/post/how-to-lavalink
 	nodes: [

@@ -57,46 +57,46 @@ const command = new SlashCommand()
 		}
 		
 		// create a new embed
-		let thing = new MessageEmbed().setColor(client.config.embedColor);
+		let filtersEmbed = new MessageEmbed().setColor(client.config.embedColor);
 		
 		if (args == "nightcore") {
-			thing.setDescription("✅ | Фільтр Nightcore увімкнений!");
+			filtersEmbed.setDescription("✅ | Фільтр Nightcore увімкнений!");
 			player.nightcore = true;
 		} else if (args == "bassboost") {
-			thing.setDescription("✅ | Фільтр BassBoost увімкнений!");
+			filtersEmbed.setDescription("✅ | Фільтр BassBoost увімкнений!");
 			player.bassboost = true;
 		} else if (args == "vaporwave") {
-			thing.setDescription("✅ | Фільтр Vaporwave увімкнений!");
+			filtersEmbed.setDescription("✅ | Фільтр Vaporwave увімкнений!");
 			player.vaporwave = true;
 		} else if (args == "pop") {
-			thing.setDescription("✅ | Фільтр Pop увімкнений!");
+			filtersEmbed.setDescription("✅ | Фільтр Pop увімкнений!");
 			player.pop = true;
 		} else if (args == "soft") {
-			thing.setDescription("✅ | Фільтр Soft увімкнений!");
+			filtersEmbed.setDescription("✅ | Фільтр Soft увімкнений!");
 			player.soft = true;
 		} else if (args == "treblebass") {
-			thing.setDescription("✅ | Фільтр Treblebass увімкнений!");
+			filtersEmbed.setDescription("✅ | Фільтр Treblebass увімкнений!");
 			player.treblebass = true;
 		} else if (args == "eightD") {
-			thing.setDescription("✅ | Фільтр Eight Dimension увімкнений!");
+			filtersEmbed.setDescription("✅ | Фільтр Eight Dimension увімкнений!");
 			player.eightD = true;
 		} else if (args == "karaoke") {
-			thing.setDescription("✅ | Фільтр Karaoke увімкнений!");
+			filtersEmbed.setDescription("✅ | Фільтр Karaoke увімкнений!");
 			player.karaoke = true;
 		} else if (args == "vibrato") {
-			thing.setDescription("✅ | Фільтр Vibrato увімкнений!");
+			filtersEmbed.setDescription("✅ | Фільтр Vibrato увімкнений!");
 			player.vibrato = true;
 		} else if (args == "tremolo") {
-			thing.setDescription("✅ | Фільтр Tremolo увімкнений!");
+			filtersEmbed.setDescription("✅ | Фільтр Tremolo увімкнений!");
 			player.tremolo = true;
 		} else if (args == "off") {
-			thing.setDescription("✅ | Еквалайзер очищений");
+			filtersEmbed.setDescription("✅ | Еквалайзер очищений");
 			player.reset();
 		} else {
-			thing.setDescription("❌ | Неправильний фільтр");
+			filtersEmbed.setDescription("❌ | Неправильний фільтр");
 		}
 		
-		return interaction.reply({ embeds: [thing] });
+		return interaction.reply({ embeds: [filtersEmbed] });
 	});
 
 module.exports = command;

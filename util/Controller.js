@@ -125,41 +125,36 @@ module.exports = async (client, interaction, options) => {
 	}
 	
 	if (property === "Queue") {
-		// await interaction.deferUpdate().catch(() => {
-		// });
+		await interaction.deferReply().catch(() => {
+		});
 		
 		if (!player.queue.size || player.queue.size === 0) {
 			let song = player.queue.current;
-			const embed = await interaction.channel.send({
-				embeds: [
-					new MessageEmbed()
-						.setColor(client.config.embedColor)
-						.setDescription(`**♪ | Зараз грає:** [${ song.title }](${ song.uri })`)
-						.addFields(
-							{
-								name: "Тривалість",
-								value: song.isStream
-									? `\`стрім\``
-									: `\`${ pms(player.position, { colonNotation: true }) } / ${ pms(
-										player.queue.current.duration,
-										{ colonNotation: true },
-									) }\``,
-								inline: true,
-							},
-							{
-								name: "Треків в черзі",
-								value: `\`${ player.queue.totalSize - 1 }\``,
-								colonNotation: true,
-								inline: true,
-							},
-						),
-				],
-			});
-			setTimeout(() => {
-				embed.delete();
-			}, 30000);
-			return interaction.deferUpdate();
+			const embed = new MessageEmbed()
+				.setColor(client.config.embedColor)
+				.setDescription(`**♪ | Зараз грає:** [${ song.title }](${ song.uri })`)
+				.addFields(
+					{
+						name: "Тривалість",
+						value: song.isStream
+							? `\`стрім\``
+							: `\`${ pms(player.position, { colonNotation: true }) } / ${ pms(
+								player.queue.current.duration,
+								{ colonNotation: true },
+							) }\``,
+						inline: true,
+					},
+					{
+						name: "Треків в черзі",
+						value: `\`${ player.queue.totalSize - 1 }\``,
+						colonNotation: true,
+						inline: true,
+					},
+				);
 			
+			return interaction.editReply({
+				embeds: [embed],
+			});
 		} else {
 			let queueDuration = player.queue.duration.valueOf();
 			if (player.queue.current.isStream) {
@@ -200,9 +195,126 @@ module.exports = async (client, interaction, options) => {
 			
 			if (player.queue.size < 11 || player.queue.totalSize < 11) {
 				let song = player.queue.current;
-				const embedTwo = await interaction.channel.send({
-					embeds: [
-						new MessageEmbed()
+				const embedTwo = new MessageEmbed()
+					.setColor(client.config.embedColor)
+					.setDescription(
+						`**♪ | Зараз грає:** [${ song.title }](${ song.uri }) \n\n**Далі:**\n${ pages[page] }`,
+					)
+					.addFields(
+						{
+							name: "Тривалість",
+							value: song.isStream
+								? `\`стрім\``
+								: `\`${ pms(player.position, { colonNotation: true }) } / ${ pms(
+									player.queue.current.duration, {
+										colonNotation: true,
+									}) }\``,
+							inline: true,
+						},
+						{
+							name: "Загальна тривалість черги",
+							value: `\`${ pms(queueDuration, {
+								colonNotation: true,
+							}) }\``,
+							inline: true,
+						},
+						{
+							name: "Загалом треків",
+							value: `\`${ player.queue.totalSize - 1 }\``,
+							colonNotation: true,
+							inline: true,
+						},
+					)
+					.setFooter({
+						text: `Сторінка ${ page + 1 }/${ pages.length }`,
+					});
+				
+				await interaction
+					.editReply({
+						embeds: [embedTwo],
+					})
+					.catch(() => {
+					});
+			} else {
+				let song = player.queue.current;
+				const embedThree = new MessageEmbed()
+					.setColor(client.config.embedColor)
+					.setDescription(
+						`**♪ | Зараз грає:** [${ song.title }](${ song.uri }) \n\n**Далі:**\n${ pages[page] }`,
+					)
+					.addFields(
+						{
+							name: "Тривалість",
+							value: song.isStream
+								? `\`стрім\``
+								: `\`${ pms(player.position, { colonNotation: true }) } / ${ pms(
+									player.queue.current.duration, {
+										colonNotation: true,
+									}) }\``,
+							inline: true,
+						},
+						{
+							name: "Загальна тривалість черги",
+							value: `\`${ pms(queueDuration, {
+								colonNotation: true,
+							}) }\``,
+							inline: true,
+						},
+						{
+							name: "Загалом треків",
+							value: `\`${ player.queue.totalSize - 1 }\``,
+							colonNotation: true,
+							inline: true,
+						},
+					)
+					.setFooter({
+						text: `Сторінка ${ page + 1 }/${ pages.length }`,
+					});
+				
+				const buttonOne = new MessageButton()
+					.setCustomId("queue_cmd_but_1_app")
+					.setEmoji("⏭️")
+					.setStyle("PRIMARY");
+				const buttonTwo = new MessageButton()
+					.setCustomId("queue_cmd_but_2_app")
+					.setEmoji("⏮️")
+					.setStyle("PRIMARY");
+				
+				await interaction
+					.editReply({
+						embeds: [embedThree],
+						components: [
+							new MessageActionRow().addComponents([buttonTwo, buttonOne]),
+						],
+					})
+					.catch(() => {
+					});
+				
+				const collector = interaction.channel.createMessageComponentCollector({
+					filter: (b) => {
+						if (b.user.id === interaction.user.id) {
+							return true;
+						} else {
+							return b
+								.reply({
+									content: `Тільки **${ interaction.user.tag }** може використати цю кнопку`,
+									ephemeral: true,
+								})
+								.catch(() => {
+								});
+						}
+					},
+					time: 60000 * 5,
+					idle: 30e3,
+				});
+				
+				collector.on("collect", async (button) => {
+					if (button.customId === "queue_cmd_but_1_app") {
+						await button.deferUpdate().catch(() => {
+						});
+						page = page + 1 < pages.length? ++page : 0;
+						
+						const embedFour = new MessageEmbed()
 							.setColor(client.config.embedColor)
 							.setDescription(
 								`**♪ | Зараз грає:** [${ song.title }](${ song.uri }) \n\n**Далі:**\n${ pages[page] }`,
@@ -234,184 +346,66 @@ module.exports = async (client, interaction, options) => {
 							)
 							.setFooter({
 								text: `Сторінка ${ page + 1 }/${ pages.length }`,
-							}),
-					],
+							});
+						
+						await interaction.editReply({
+							embeds: [embedFour],
+							components: [
+								new MessageActionRow().addComponents([buttonTwo, buttonOne]),
+							],
+						});
+					} else if (button.customId === "queue_cmd_but_2_app") {
+						await button.deferUpdate().catch(() => {
+						});
+						page = page > 0? --page : pages.length - 1;
+						
+						const embedFive = new MessageEmbed()
+							.setColor(client.config.embedColor)
+							.setDescription(
+								`**♪ | Зараз грає:** [${ song.title }](${ song.uri }) \n\n**Далі:**\n${ pages[page] }`,
+							)
+							.addFields(
+								{
+									name: "Тривалість",
+									value: song.isStream
+										? `\`стрім\``
+										: `\`${ pms(player.position, { colonNotation: true }) } / ${ pms(
+											player.queue.current.duration, {
+												colonNotation: true,
+											}) }\``,
+									inline: true,
+								},
+								{
+									name: "Загальна тривалість черги",
+									value: `\`${ pms(queueDuration, {
+										colonNotation: true,
+									}) }\``,
+									inline: true,
+								},
+								{
+									name: "Загалом треків",
+									value: `\`${ player.queue.totalSize - 1 }\``,
+									colonNotation: true,
+									inline: true,
+								},
+							)
+							.setFooter({
+								text: `Сторінка ${ page + 1 }/${ pages.length }`,
+							});
+						
+						await interaction
+							.editReply({
+								embeds: [embedFive],
+								components: [
+									new MessageActionRow().addComponents([buttonTwo, buttonOne]),
+								],
+							})
+							.catch(() => {
+							});
+					} else {
+						return;
+					}
 				});
-				setTimeout(() => {
-					embedTwo.delete();
-				}, 60000);
-				return interaction.deferUpdate();
-				// 	} else {
-				// 		let song = player.queue.current;
-				// 		const embedThree = new MessageEmbed()
-				// 			.setColor(client.config.embedColor)
-				// 			.setDescription(
-				// 				`**♪ | Зараз грає:** [${ song.title }](${ song.uri }) \n\n**Далі:**\n${ pages[page] }`,
-				// 			)
-				// 			.addFields(
-				// 				{
-				// 					name: "Тривалість",
-				// 					value: song.isStream
-				// 						? `\`стрім\``
-				// 						: `\`${ pms(player.position, { colonNotation: true }) } / ${ pms(
-				// 							player.queue.current.duration, {
-				// 								colonNotation: true,
-				// 							}) }\``,
-				// 					inline: true,
-				// 				},
-				// 				{
-				// 					name: "Загальна тривалість черги",
-				// 					value: `\`${ pms(queueDuration, {
-				// 						colonNotation: true,
-				// 					}) }\``,
-				// 					inline: true,
-				// 				},
-				// 				{
-				// 					name: "Загалом треків",
-				// 					value: `\`${ player.queue.totalSize - 1 }\``,
-				// 					colonNotation: true,
-				// 					inline: true,
-				// 				},
-				// 			)
-				// 			.setFooter({
-				// 				text: `Сторінка ${ page + 1 }/${ pages.length }`,
-				// 			});
-				//
-				// 		const buttonOne = new MessageButton()
-				// 			.setCustomId("queue_cmd_but_1_app")
-				// 			.setEmoji("⏭️")
-				// 			.setStyle("PRIMARY");
-				// 		const buttonTwo = new MessageButton()
-				// 			.setCustomId("queue_cmd_but_2_app")
-				// 			.setEmoji("⏮️")
-				// 			.setStyle("PRIMARY");
-				//
-				// 		await interaction
-				// 			.editReply({
-				// 				embeds: [embedThree],
-				// 				components: [
-				// 					new MessageActionRow().addComponents([buttonTwo, buttonOne]),
-				// 				],
-				// 			})
-				// 			.catch(() => {
-				// 			});
-				//
-				// 		const collector = interaction.channel.createMessageComponentCollector({
-				// 			filter: (b) => {
-				// 				if (b.user.id === interaction.user.id) {
-				// 					return true;
-				// 				} else {
-				// 					return b
-				// 						.reply({
-				// 							content: `Тільки **${ interaction.user.tag }** може використати цю кнопку`,
-				// 							ephemeral: true,
-				// 						})
-				// 						.catch(() => {
-				// 						});
-				// 				}
-				// 			},
-				// 			time: 60000 * 5,
-				// 			idle: 30e3,
-				// 		});
-				//
-				// 		collector.on("collect", async (button) => {
-				// 			if (button.customId === "queue_cmd_but_1_app") {
-				// 				await button.deferUpdate().catch(() => {
-				// 				});
-				// 				page = page + 1 < pages.length? ++page : 0;
-				//
-				// 				const embedFour = new MessageEmbed()
-				// 					.setColor(client.config.embedColor)
-				// 					.setDescription(
-				// 						`**♪ | Зараз грає:** [${ song.title }](${ song.uri }) \n\n**Далі:**\n${ pages[page] }`,
-				// 					)
-				// 					.addFields(
-				// 						{
-				// 							name: "Тривалість",
-				// 							value: song.isStream
-				// 								? `\`стрім\``
-				// 								: `\`${ pms(player.position, { colonNotation: true }) } / ${ pms(
-				// 									player.queue.current.duration, {
-				// 										colonNotation: true,
-				// 									}) }\``,
-				// 							inline: true,
-				// 						},
-				// 						{
-				// 							name: "Загальна тривалість черги",
-				// 							value: `\`${ pms(queueDuration, {
-				// 								colonNotation: true,
-				// 							}) }\``,
-				// 							inline: true,
-				// 						},
-				// 						{
-				// 							name: "Загалом треків",
-				// 							value: `\`${ player.queue.totalSize - 1 }\``,
-				// 							colonNotation: true,
-				// 							inline: true,
-				// 						},
-				// 					)
-				// 					.setFooter({
-				// 						text: `Сторінка ${ page + 1 }/${ pages.length }`,
-				// 					});
-				//
-				// 				await interaction.editReply({
-				// 					embeds: [embedFour],
-				// 					components: [
-				// 						new MessageActionRow().addComponents([buttonTwo, buttonOne]),
-				// 					],
-				// 				});
-				// 			} else if (button.customId === "queue_cmd_but_2_app") {
-				// 				await button.deferUpdate().catch(() => {
-				// 				});
-				// 				page = page > 0? --page : pages.length - 1;
-				//
-				// 				const embedFive = new MessageEmbed()
-				// 					.setColor(client.config.embedColor)
-				// 					.setDescription(
-				// 						`**♪ | Зараз грає:** [${ song.title }](${ song.uri }) \n\n**Далі:**\n${ pages[page] }`,
-				// 					)
-				// 					.addFields(
-				// 						{
-				// 							name: "Тривалість",
-				// 							value: song.isStream
-				// 								? `\`стрім\``
-				// 								: `\`${ pms(player.position, { colonNotation: true }) } / ${ pms(
-				// 									player.queue.current.duration, {
-				// 										colonNotation: true,
-				// 									}) }\``,
-				// 							inline: true,
-				// 						},
-				// 						{
-				// 							name: "Загальна тривалість черги",
-				// 							value: `\`${ pms(queueDuration, {
-				// 								colonNotation: true,
-				// 							}) }\``,
-				// 							inline: true,
-				// 						},
-				// 						{
-				// 							name: "Загалом треків",
-				// 							value: `\`${ player.queue.totalSize - 1 }\``,
-				// 							colonNotation: true,
-				// 							inline: true,
-				// 						},
-				// 					)
-				// 					.setFooter({
-				// 						text: `Сторінка ${ page + 1 }/${ pages.length }`,
-				// 					});
-				//
-				// 				await interaction
-				// 					.editReply({
-				// 						embeds: [embedFive],
-				// 						components: [
-				// 							new MessageActionRow().addComponents([buttonTwo, buttonOne]),
-				// 						],
-				// 					})
-				// 					.catch(() => {
-				// 					});
-				// 			} else {
-				// 				return interaction.deferUpdate();
-				// 			}
-				// 		});
 			}
 		}
 	}

@@ -23,11 +23,11 @@ module.exports = {
 	// Lavalink server; public lavalink -> https://lavalink-list.darrennathanael.com/; create one yourself -> https://darrennathanael.com/post/how-to-lavalink
 	nodes: [
 		{
-			identifier: "Main node", //- Used for identifier in stats commands.
-			host: "audio.alexanderof.xyz",
+			identifier: this.host, //- Used for indentifier in stats commands.
+			host: "lavalink.oops.wtf",
 			port: 2000,
-			password: "lavalink",
-			retryAmount: 100, //- The amount of times to retry connecting to the node if connection got dropped.
+			password: "www.freelavalink.ga",
+			retryAmount: 200, //- The amount of times to retry connecting to the node if connection got dropped.
 			retryDelay: 40, //- Delay between reconnect attempts if connection is lost.
 			secure: false, //- Can be either true or false. Only use true if ssl is enabled!
 		},

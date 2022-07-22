@@ -11,6 +11,11 @@ const command = new SlashCommand()
 		// get OS info
 		const osver = os.platform() + " " + os.release();
 		
+		let player;
+		if (client.manager) {
+			player = client.manager.players.get(interaction.guild.id);
+		}
+		
 		// Get nodejs version
 		const nodeVersion = process.version;
 		
@@ -60,7 +65,7 @@ const command = new SlashCommand()
 			.setFields([
 				{
 					name: `Статистика Lavalink`,
-					value: `\`\`\`yml\nUptime: ${ lavauptime }\nRAM: ${ lavaram } MB\nPlaying: ${
+					value: `\`\`\`yml\n${ player? player.node.options.host + "\n" : "" }Uptime: ${ lavauptime }\nRAM: ${ lavaram } MB\nPlaying: ${
 						client.manager.nodes.values().next().value.stats.playingPlayers
 					} з ${
 						client.manager.nodes.values().next().value.stats.players

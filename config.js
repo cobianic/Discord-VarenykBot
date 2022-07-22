@@ -20,7 +20,7 @@ module.exports = {
 	// The default one should work fine.
 	nodes: [
 		{
-			identifier: "Main Node", //- Used for indentifier in stats commands.
+			identifier: this.host, //- Used for indentifier in stats commands.
 			host: "lavalink.oops.wtf",
 			port: 2000,
 			password: "www.freelavalink.ga",

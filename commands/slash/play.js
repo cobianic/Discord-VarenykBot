@@ -46,13 +46,14 @@ const command = new SlashCommand()
 				}
 			}, 2000); //recognizing it's a stage channel?
 		}
-
-		await interaction.reply({
+		
+		const ret = await interaction.reply({
 			embeds: [
 				new MessageEmbed()
 					.setColor(client.config.embedColor)
 					.setDescription(":mag_right: **Шукаю...**"),
 			],
+			fetchReply: true,
 		});
 
 		let query = options.getString("запит", true);
@@ -67,7 +68,7 @@ const command = new SlashCommand()
 			if (!player.queue.current) {
 				player.destroy();
 			}
-			return interaction
+			await interaction
 				.editReply({
 					embeds: [
 						new MessageEmbed()
@@ -82,7 +83,7 @@ const command = new SlashCommand()
 			if (!player.queue.current) {
 				player.destroy();
 			}
-			return interaction
+			await interaction
 				.editReply({
 					embeds: [
 						new MessageEmbed()
@@ -94,24 +95,12 @@ const command = new SlashCommand()
 		}
 
 		if (res.loadType === "TRACK_LOADED" || res.loadType === "SEARCH_RESULT") {
-			const r = res.tracks[0];
-			if (player.get("autoplay")) {
-				const psba = player.get("autoplayed") || [];
-				if (r) {
-					if (!psba.includes(r.identifier)) {
-						psba.push(r.identifier);
-					}
-				}
-				while (psba.length > 100) {
-					psba.shift();
-				}
-				player.set("autoplayed", psba);
-			}
-			player.queue.add(r);
+			player.queue.add(res.tracks[0]);
+			
 			if (!player.playing && !player.paused && !player.queue.size) {
 				player.play();
 			}
-
+			
 			let addQueueEmbed = new MessageEmbed()
 				.setColor(client.config.embedColor)
 				.setAuthor({ name: "Додано до черги", iconURL: client.config.iconURL })
@@ -147,25 +136,13 @@ const command = new SlashCommand()
 			} else {
 				player.queue.previous = player.queue.current;
 			}
-
-			return interaction
+			
+			await interaction
 				.editReply({ embeds: [addQueueEmbed] })
 				.catch(this.warn);
 		}
 
 		if (res.loadType === "PLAYLIST_LOADED") {
-			if (player.get("autoplay")) {
-				const psba = player.get("autoplayed") || [];
-				for (const r of res.tracks) {
-					if (r && !psba.includes(r.identifier)) {
-						psba.push(r.identifier);
-					}
-				}
-				while (psba.length > 100) {
-					psba.shift();
-				}
-				player.set("autoplayed", psba);
-			}
 			player.queue.add(res.tracks);
 
 			if (
@@ -190,11 +167,14 @@ const command = new SlashCommand()
 					`\`${ client.ms(res.playlist.duration, { colonNotation: true }) }\``,
 					false,
 				);
-
-			return interaction
+			
+			await interaction
 				.editReply({ embeds: [playlistEmbed] })
 				.catch(this.warn);
 		}
+		
+		if (ret) setTimeout(() => ret.delete().catch(this.warn), 20000);
+		return ret;
 	});
 
 module.exports = command;

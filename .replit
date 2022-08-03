@@ -1,2 +1,5 @@
 run = "node index.js"
-language = "Nix"
+language = "Bash"
+
+[nix]
+channel = "stable-22_05"

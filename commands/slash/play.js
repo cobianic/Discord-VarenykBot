@@ -17,7 +17,7 @@ const command = new SlashCommand()
 		if (!channel) {
 			return;
 		}
-
+		
 		let player;
 		if (client.manager) {
 			player = client.createPlayer(interaction.channel, channel);
@@ -30,21 +30,21 @@ const command = new SlashCommand()
 				],
 			});
 		}
-
+		
 		if (player.state !== "CONNECTED") {
 			player.connect();
 		}
-
+		
 		if (channel.type == "GUILD_STAGE_VOICE") {
 			setTimeout(() => {
-				if (interaction.guild.me.voice.suppress === true) {
+				if (interaction.guild.me.voice.suppress == true) {
 					try {
 						interaction.guild.me.voice.setSuppressed(false);
 					} catch (e) {
 						interaction.guild.me.voice.setRequestToSpeak(true);
 					}
 				}
-			}, 2000); //recognizing it's a stage channel?
+			}, 2000); // Need this because discord api is buggy asf, and without this the bot will not request to speak on a stage - Darren
 		}
 		
 		const ret = await interaction.reply({
@@ -63,7 +63,7 @@ const command = new SlashCommand()
 				loadType: "LOAD_FAILED",
 			};
 		});
-
+		
 		if (res.loadType === "LOAD_FAILED") {
 			if (!player.queue.current) {
 				player.destroy();
@@ -78,7 +78,7 @@ const command = new SlashCommand()
 				})
 				.catch(this.warn);
 		}
-
+		
 		if (res.loadType === "NO_MATCHES") {
 			if (!player.queue.current) {
 				player.destroy();
@@ -93,7 +93,7 @@ const command = new SlashCommand()
 				})
 				.catch(this.warn);
 		}
-
+		
 		if (res.loadType === "TRACK_LOADED" || res.loadType === "SEARCH_RESULT") {
 			player.queue.add(res.tracks[0]);
 			
@@ -115,10 +115,11 @@ const command = new SlashCommand()
 						? `\`стрім\``
 						: `\`${ client.ms(res.tracks[0].duration, {
 							colonNotation: true,
+							secondsDecimalDigits: 0,
 						}) }\``,
 					true,
 				);
-
+			
 			try {
 				addQueueEmbed.setThumbnail(
 					res.tracks[0].displayThumbnail("maxresdefault"),
@@ -126,7 +127,7 @@ const command = new SlashCommand()
 			} catch (err) {
 				addQueueEmbed.setThumbnail(res.tracks[0].thumbnail);
 			}
-
+			
 			if (player.queue.totalSize > 1) {
 				addQueueEmbed.addField(
 					"Позиція в черзі",
@@ -141,10 +142,10 @@ const command = new SlashCommand()
 				.editReply({ embeds: [addQueueEmbed] })
 				.catch(this.warn);
 		}
-
+		
 		if (res.loadType === "PLAYLIST_LOADED") {
 			player.queue.add(res.tracks);
-
+			
 			if (
 				!player.playing &&
 				!player.paused &&
@@ -152,7 +153,7 @@ const command = new SlashCommand()
 			) {
 				player.play();
 			}
-
+			
 			let playlistEmbed = new MessageEmbed()
 				.setColor(client.config.embedColor)
 				.setAuthor({
@@ -164,7 +165,7 @@ const command = new SlashCommand()
 				.addField("Додано в чергу", `\`${ res.tracks.length }\` пісень`, false)
 				.addField(
 					"Тривалість плейлиста",
-					`\`${ client.ms(res.playlist.duration, { colonNotation: true }) }\``,
+					`\`${ client.ms(res.playlist.duration, { colonNotation: true, secondsDecimalDigits: 0 }) }\``,
 					false,
 				);
 			

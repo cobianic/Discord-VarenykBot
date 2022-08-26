@@ -163,15 +163,21 @@ const command = new SlashCommand()
 									`[${ trackForPlay?.tracks[0]?.title }](${ trackForPlay?.tracks[0].uri })` ||
 									"Без назви",
 								)
-								.addField("Автор", trackForPlay?.tracks[0].author, true)
-								.addField(
-									"Тривалість",
-									res.tracks[0].isStream
-										? `\`стрім\``
-										: `\`${ client.ms(res.tracks[0].duration, {
-											colonNotation: true,
-										}) }\``,
-									true,
+								.addFields(
+									{
+										name: "Автор",
+										value: trackForPlay?.tracks[0].author,
+										inline: true,
+									},
+									{
+										name: "Тривалість",
+										value: res.tracks[0].isStream
+											? `\`стрім\``
+											: `\`${ client.ms(res.tracks[0].duration, {
+												colonNotation: true,
+											}) }\``,
+										inline: true,
+									},
 								)
 								.setColor(client.config.embedColor),
 						],

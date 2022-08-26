@@ -108,16 +108,21 @@ const command = new SlashCommand()
 					`[${ res.tracks[0].title }](${ res.tracks[0].uri })` || "Без назви",
 				)
 				.setURL(res.tracks[0].uri)
-				.addField("Автор", res.tracks[0].author, true)
-				.addField(
-					"Тривалість",
-					res.tracks[0].isStream
-						? `\`стрім\``
-						: `\`${ client.ms(res.tracks[0].duration, {
-							colonNotation: true,
-							secondsDecimalDigits: 0,
-						}) }\``,
-					true,
+				.addFields({
+						name: "Автор",
+						value: res.tracks[0].author,
+						inline: true,
+					},
+					{
+						name: "Тривалість",
+						value: res.tracks[0].isStream
+							? `\`стрім\``
+							: `\`${ client.ms(res.tracks[0].duration, {
+								colonNotation: true,
+								secondsDecimalDigits: 0,
+							}) }\``,
+						inline: true,
+					},
 				);
 			
 			try {
@@ -129,11 +134,11 @@ const command = new SlashCommand()
 			}
 			
 			if (player.queue.totalSize > 1) {
-				addQueueEmbed.addField(
-					"Позиція в черзі",
-					`${ player.queue.size }`,
-					true,
-				);
+				addQueueEmbed.addFields({
+					name: "Позиція в черзі",
+					value: `${ player.queue.size }`,
+					inline: true,
+				});
 			} else {
 				player.queue.previous = player.queue.current;
 			}
@@ -162,12 +167,17 @@ const command = new SlashCommand()
 				})
 				.setThumbnail(res.tracks[0].thumbnail)
 				.setDescription(`[${ res.playlist.name }](${ query })`)
-				.addField("Додано в чергу", `\`${ res.tracks.length }\` пісень`, false)
-				.addField(
-					"Тривалість плейлиста",
-					`\`${ client.ms(res.playlist.duration, { colonNotation: true, secondsDecimalDigits: 0 }) }\``,
-					false,
-				);
+				.addFields(
+					{
+						name: "Додано в чергу",
+						value: `\`${ res.tracks.length }\` пісень`,
+						inline: false,
+					},
+					{
+						name: "Тривалість плейлиста",
+						value: `\`${ client.ms(res.playlist.duration, { colonNotation: true, secondsDecimalDigits: 0 }) }\``,
+						inline: false,
+					});
 			
 			await interaction
 				.editReply({ embeds: [playlistEmbed] })

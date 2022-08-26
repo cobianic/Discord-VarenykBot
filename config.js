@@ -24,9 +24,9 @@ module.exports = {
 	nodes: [
 		{
 			identifier: this.host, //- Used for indentifier in stats commands.
-			host: "ash-01.thermalhosting.com",
-			port: 2008,
-			password: "ASH-01",
+			host: "lavalink.oops.wtf",
+			port: 2000,
+			password: "www.freelavalink.ga",
 			retryAmount: 200, //- The amount of times to retry connecting to the node if connection got dropped.
 			retryDelay: 40, //- Delay between reconnect attempts if connection is lost.
 			secure: false, //- Can be either true or false. Only use true if ssl is enabled!

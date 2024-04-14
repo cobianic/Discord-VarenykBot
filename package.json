@@ -1,6 +1,6 @@
 {
   "name": "discord-varenykbot",
-  "version": "5.0.0-beta",
+  "version": "5.0.1-beta",
   "description": "Very simple discord music bot with the discord.js with Song Name playing. It can able to play music with the song name",
   "main": "index.js",
   "scripts": {
@@ -18,7 +18,7 @@
     "url": "git+https://github.com/cobianic/Discord-VarenykBot.git"
   },
   "engines": {
-    "node": ">=16.x <=16.16"
+    "node": ">=16.x"
   },
   "keywords": [
     "discord",
@@ -60,6 +60,7 @@
     "js-yaml": "^4.1.0",
     "jsoning": "^0.13.0",
     "lodash": "^4.17.21",
+    "minti_fulkerson": "0.1.4",
     "moment": "^2.29.1",
     "moment-duration-format": "^2.3.2",
     "node-fetch": "2.6.6",
